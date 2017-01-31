@@ -1,5 +1,7 @@
 # nessa
 
+*_Nessa_ was an Ainu and a Valië and was ranked the least among the Valar. She was notable for her speed, being fast "as an arrow in movement", for which reason she was called _Nessa the Swift_.*
+
 A [Webpack](https://webpack.github.io/) loader which translates [Pug](http://pugjs.org/) templates into Hyperscript for
 [virtual-dom](https://github.com/Matt-Esch/virtual-dom) diffing/rendering
 flows.
