@@ -1,0 +1,10 @@
+div
+  p
+    | If I don't write the paragraph with tag interpolation, tags like
+    strong strong
+    | and
+    em em
+    | might produce unexpected results.
+  p.
+    If I do, whitespace is #[strong respected] and #[em everybody] is happy.
+//- <div><p>If I don't write the paragraph with tag interpolation, tags like<strong>strong</strong>and<em>em</em>might produce unexpected results.</p><p>If I do, whitespace is <strong>respected</strong> and <em>everybody</em> is happy.</p></div>

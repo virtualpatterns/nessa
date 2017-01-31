@@ -1,0 +1,12 @@
+*.bts
+*.err
+*.log
+*.out
+*.pid
+/library
+/node_modules
+/process
+/sandbox
+/server
+/tests
+/www

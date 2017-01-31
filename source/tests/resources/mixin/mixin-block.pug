@@ -1,0 +1,10 @@
+mixin article()
+  if block
+    block
+  else
+    p Nothing
+
+div
+  +article()
+  +article()
+    p Article
