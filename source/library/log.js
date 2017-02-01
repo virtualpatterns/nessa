@@ -81,7 +81,7 @@ if (IsNode) {
     this.remove(path)
   }
 
-  Log.removeConsole()
+  Log.clear()
 
 } else {
 
