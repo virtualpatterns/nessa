@@ -1,5 +1,6 @@
 import Server from 'restify'
 
+import FileSystem from '../library/file-system'
 import Log from '../library/log'
 import Package from '../package.json'
 import Path from '../library/path'
@@ -8,6 +9,8 @@ const LOG_PATH = Path.join(__dirname, '..', 'process', 'logs', `${Package.name}.
 const PORT = 8082
 const REGEXP_MOCHA = /^\/www\/vendor\/mocha\/(.*)$/
 const REGEXP_STATIC = /^\/www\/(.*)$/
+
+FileSystem.mkdirp.sync(Path.dirname(LOG_PATH))
 
 Log.addConsole()
 Log.addFile(LOG_PATH)

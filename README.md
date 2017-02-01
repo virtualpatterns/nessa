@@ -6,6 +6,8 @@ A [Webpack](https://webpack.github.io/) loader which translates [Pug](http://pug
 [virtual-dom](https://github.com/Matt-Esch/virtual-dom) diffing/rendering
 flows.
 
+[![NPM](https://nodei.co/npm/nessa.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nessa/)
+
 ## Installation
 
 Add `nessa` to dev dependencies in `package.json`:
