@@ -3,9 +3,6 @@
 *.log
 *.out
 *.pid
-/library/errors/argument-error.js
-/library/errors/process-error.js
-/library/process.js
 /process
 /resources
 /sandbox
