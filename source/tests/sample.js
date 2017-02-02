@@ -1,3 +1,5 @@
+import Assert from 'assert'
+
 import It from './library/it'
 
 describe('Sample', () => {
@@ -5,8 +7,11 @@ describe('Sample', () => {
   It.shouldEqual([
     {
       'path': 'index.pug',
-      'matchFn': '',
-      'debug': true,
+      'data': {
+        'name': 'virtualpatterns.com'
+      },
+      'matchFn': () => Assert.ok(false),
+      'debug': false,
       'itFn': it.skip
     },
     {

@@ -19,11 +19,16 @@ It.shouldEqual = function (tests) {
   tests.forEach((test) => {
 
     (test.itFn || it)(`should produce the correct output for ${test.path}`, () => {
+
+      if (test.debug) {
+        Log.debug(`- should produce the correct output for ${test.path}`)
+        Log.inspect('data', test.data || {})
+      }
+
       let virtualContent = Transform.compilePath(Path.join(RESOURCES_PATH, test.path), Configuration[Package.name])(test.data || {})
       let realContent = VirtualNodeToHTML(virtualContent)
 
       if (test.debug) {
-        Log.debug(`- should produce the correct output for ${test.path}`)
         Log.inspect('virtualContent', virtualContent)
         Log.inspect('realContent', realContent)
       }

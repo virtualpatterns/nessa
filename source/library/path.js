@@ -10,11 +10,7 @@ Path.resolve = function (path) {
 };
 
 Path.trim = function (path) {
-
-  // import Process from './process'
-
   return path.replace(Process.cwd(), '.');
-
 };
 
 module.exports = Path;

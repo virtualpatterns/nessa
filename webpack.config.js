@@ -23,7 +23,6 @@ module.exports = {
       {
         'test': /\.pug$/,
         'loader': Path.join(__dirname, 'library', 'loader'),
-        // 'loader': 'pug',
       }
     ]
   },
@@ -38,8 +37,6 @@ module.exports = {
     'debug': true,
     'logPath': LOG_PATH,
     'require': {
-      // 'createVirtualNode': require.resolve('virtual-dom/h'),
-      // 'escapeHtml': require.resolve('escape-html'),
       'utilities': Path.join(__dirname, 'library', 'utilities')
     }
   }

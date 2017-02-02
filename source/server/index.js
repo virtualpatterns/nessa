@@ -12,6 +12,7 @@ const REGEXP_STATIC = /^\/www\/(.*)$/
 
 FileSystem.mkdirp.sync(Path.dirname(LOG_PATH))
 
+Log.clear()
 Log.addConsole()
 Log.addFile(LOG_PATH)
 Log.line()
