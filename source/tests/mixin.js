@@ -6,19 +6,27 @@ describe('Mixin', () => {
   It.shouldEqual([
     {
       'path': Path.join('mixin', 'default.pug'),
-      'matchFn': '<div><ul><li>foo</li><li>bar</li><li>baz</li></ul><ul><li>foo</li><li>bar</li><li>baz</li></ul></div>'
+      'matchFn': '<div><ul><li>foo</li><li>bar</li><li>baz</li></ul><ul><li>foo</li><li>bar</li><li>baz</li></ul></div>',
+      // 'debug': true,
+      // 'itFn': it.only
     },
     {
       'path': Path.join('mixin', 'default-arguments.pug'),
-      'matchFn': '<ul><li class="pet">cat</li><li class="pet">dog</li><li class="pet">pig</li></ul>'
+      'matchFn': '<ul><li class="pet">cat</li><li class="pet">dog</li><li class="pet">pig</li></ul>',
+      // 'debug': true,
+      // 'itFn': it.only
     },
     {
       'path': Path.join('mixin', 'mixin-block.pug'),
-      'matchFn': '<div><p>Nothing</p><p>Article</p></div>'
+      'matchFn': '<div><p>Nothing</p><p>Article</p></div>',
+      // 'debug': true,
+      // 'itFn': it.only
     },
     {
       'path': Path.join('mixin', 'mixin-attributes.pug'),
-      'matchFn': '<a class="btn" href="/foo">foo</a>'
+      'matchFn': '<a class="btn" href="/foo">foo</a>',
+      // 'debug': true,
+      // 'itFn': it.only
     },
     {
       'path': Path.join('mixin', 'mixin-attributes-and.pug'),

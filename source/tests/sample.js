@@ -11,7 +11,7 @@ describe('Sample', () => {
         'name': 'virtualpatterns.com'
       },
       'matchFn': () => Assert.ok(false),
-      'debug': false,
+      'debug': true,
       'itFn': it.skip
     },
     {

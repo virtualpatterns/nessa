@@ -8,7 +8,9 @@ describe('Case', () => {
   It.shouldEqual([
     {
       'path': Path.join('case', 'default.pug'),
-      'matchFn': '<p>you have 10 friends</p>'
+      'matchFn': '<p>you have 10 friends</p>',
+      // 'debug': true,
+      // 'itFn': it.only
     },
     {
       'path': Path.join('case', 'case-fall-through.pug'),

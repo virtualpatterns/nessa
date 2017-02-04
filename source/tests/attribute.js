@@ -9,7 +9,9 @@ describe('Attribute', () => {
   It.shouldEqual([
     {
       'path': Path.join('attribute', 'default.pug'),
-      'matchFn': '<a href="google.com">Google</a>'
+      'matchFn': '<a href="google.com">Google</a>',
+      // 'debug': true,
+      // 'itFn': it.only
     },
     {
       'path': Path.join('attribute', 'default-class.pug'),
@@ -45,7 +47,9 @@ describe('Attribute', () => {
 
         Assert.equal(virtualContent.properties['data-json'], '\n  {\n    &quot;very-long&quot;: &quot;piece of &quot;,\n    &quot;data&quot;: true\n  }\n')
 
-      }
+      },
+      // 'debug': true,
+      // 'itFn': it.only
     },
     {
       'path': Path.join('attribute', 'non-quoted-attribute.pug'),
@@ -153,13 +157,17 @@ describe('Attribute', () => {
         Assert.equal(virtualContent.properties.id, 'foo')
         Assert.equal(virtualContent.properties.className, 'baz')
         Assert.equal(virtualContent.properties['data-bar'], 'foo')
-      }
+      },
+      // 'debug': true,
+      // 'itFn': it.only
     },
     {
       'path': Path.join('attribute', 'escaped-attribute.pug'),
       'matchFn': (virtualContent, realContent, transformOptions) => {
         Assert.equal(virtualContent.properties.data, '&lt;code&gt;')
-      }
+      },
+      // 'debug': true,
+      // 'itFn': it.only
     },
     {
       'path': Path.join('attribute', 'unescaped-attribute.pug'),

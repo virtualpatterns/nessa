@@ -1,6 +1,5 @@
 import { transform as Compile } from 'babel-core'
 import EscapeJs from 'jsesc'
-// import { js_beautify as Format } from 'js-beautify'
 import Filters from 'pug-filters'
 import { format as Format } from 'prettier'
 import Identifier from 'to-js-identifier'
@@ -26,64 +25,55 @@ Transform.render = function (content, context, options) {
   Log.inspect('context', context)
   Log.inspect('options', options)
 
-  const processNode = (node) => {
-    Log.debug('- processNode(node)')
+  const processNode = (node, source) => {
+    Log.debug('- processNode(node, source)')
     Log.debug(`- node.type.toUpperCase()='${node.type.toUpperCase()}'`)
 
     switch (node.type.toUpperCase()) {
       case 'BLOCK':
-        processBlock(node)
+        processBlock(node, source)
         break
       case 'CASE':
-        processCase(node)
+        processCase(node, source)
         break
       case 'WHEN':
-        processWhen(node)
+        processWhen(node, source)
         break
       case 'CODE':
-        processCode(node)
+        processCode(node, source)
         break
       case 'COMMENT':
-        processComment(node)
+        processComment(node, source)
         break
       case 'BLOCKCOMMENT':
-        processBlockComment(node)
+        processBlockComment(node, source)
         break
       case 'CONDITIONAL':
-        processConditional(node)
+        processConditional(node, source)
         break
       case 'EACH':
-        processEach(node)
+        processEach(node, source)
         break
       case 'WHILE':
-        processWhile(node)
+        processWhile(node, source)
         break
-      // case 'EXTENDS':
-      //   processExtends(node)
-      //   break
       case 'NAMEDBLOCK':
-        processNamedBlock(node)
+        processNamedBlock(node, source)
         break
       case 'FILTER':
-        processFilter(node)
+        processFilter(node, source)
         break
-      // case 'INCLUDE':
-      //   processInclude(node)
-      //   break
-      // case 'RAWINCLUDE':
-      //   processRawInclude(node)
-      //   break
       case 'MIXIN':
-        processMixin(node)
+        processMixin(node, source)
         break
       case 'MIXINBLOCK':
-        processMixinBlock(node)
+        processMixinBlock(node, source)
         break
       case 'TAG':
-        processTag(node)
+        processTag(node, source)
         break
       case 'TEXT':
-        processText(node)
+        processText(node, source)
         break
       default:
         throw new UnSupportedError(`The node type ${node.type} is unsupported.`)
@@ -91,37 +81,29 @@ Transform.render = function (content, context, options) {
 
   }
 
-  const processBlock = (node) => {
-    Log.debug('- processBlock(node)')
+  const processBlock = (node, source) => {
+    Log.debug('- processBlock(node, source)')
     Log.debug(`- node.nodes.length=${node.nodes.length}`)
-
-    if (node.nodes.length > 0) {
-      // source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat((() => {`)
-      // source.push(`let ${Package.name}Nodes = []`)
-      node.nodes.forEach((childNode) => processNode(childNode))
-      // source.push(`return ${Package.name}Nodes`)
-      // source.push('})())')
-    }
-
+    node.nodes.forEach((childNode) => processNode(childNode, source))
   }
 
-  const processCase = (node) => {
-    Log.debug('- processCase(node)')
+  const processCase = (node, source) => {
+    Log.debug('- processCase(node, source)')
     Log.debug(`- node.expr='${node.expr}'`)
 
     source.push(`switch(${node.expr}) {`)
-    node.block.nodes.forEach((whenNode) => processNode(whenNode))
+    node.block.nodes.forEach((whenNode) => processWhen(whenNode, source))
     source.push('}')
 
   }
 
-  const processWhen = (node) => {
-    Log.debug('- processWhen(node)')
+  const processWhen = (node, source) => {
+    Log.debug('- processWhen(node, source)')
     Log.debug(`- node.expr='${node.expr}'`)
 
     if (node.expr == 'default') {
       source.push(`${node.expr}:`)
-      processBlock(node.block)
+      processBlock(node.block, source)
     } else {
 
       source.push(`case ${node.expr}:`)
@@ -134,7 +116,7 @@ Transform.render = function (content, context, options) {
           // Do nothing
         }
         else {
-          processBlock(node.block)
+          processBlock(node.block, source)
         }
 
         source.push('break')
@@ -145,15 +127,15 @@ Transform.render = function (content, context, options) {
 
   }
 
-  const processCode = (node) => {
-    Log.debug('- processCode(node)')
+  const processCode = (node, source) => {
+    Log.debug('- processCode(node, source)')
     Log.debug(`- node.buffer=${node.buffer}`)
     Log.debug(`- node.mustEscape=${node.mustEscape}`)
     Log.inspect('node.val', node.val)
 
     if (node.buffer) {
       if (node.mustEscape) {
-        source.push(`${Package.name}Nodes.push(${node.val})`)
+        source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(${node.val})`)
       } else {
         throw new UnSupportedError('Buffered unescaped source is unsupported.')
       }
@@ -163,7 +145,7 @@ Transform.render = function (content, context, options) {
 
       if (node.block) {
         source.push('{')
-        processBlock(node.block)
+        processBlock(node.block, source)
         source.push('}')
       } else {
         source.push('')
@@ -173,8 +155,8 @@ Transform.render = function (content, context, options) {
 
   }
 
-  const processComment = (node) => {
-    Log.debug('- processComment(node)')
+  const processComment = (node, source) => {
+    Log.debug('- processComment(node, source)')
     Log.debug(`- node.buffer=${node.buffer}`)
     Log.debug(`- node.val='${node.val}'`)
 
@@ -184,8 +166,8 @@ Transform.render = function (content, context, options) {
 
   }
 
-  const processBlockComment = (node) => {
-    Log.debug('- processBlockComment(node)')
+  const processBlockComment = (node, source) => {
+    Log.debug('- processBlockComment(node, source)')
     Log.debug(`- node.buffer=${node.buffer}`)
 
     if (node.buffer) {
@@ -198,8 +180,8 @@ Transform.render = function (content, context, options) {
 
   }
 
-  const processConditional = (node) => {
-    Log.debug('- processConditional(node)')
+  const processConditional = (node, source) => {
+    Log.debug('- processConditional(node, source)')
     Log.debug(`- node.test=${node.test}`)
 
     source.push(`if ( ${node.test} ) {`)
@@ -216,51 +198,45 @@ Transform.render = function (content, context, options) {
 
   }
 
-  const processEach = (node) => {
-    Log.debug('- processEach(node)')
+  const processEach = (node, source) => {
+    Log.debug('- processEach(node, source)')
     Log.debug(`- node.obj=${node.obj}`)
     Log.debug(`- node.val=${node.val}`)
     Log.debug(`- node.key=${node.key}`)
 
     source.push(`if ( ${Package.name}Utilities.forEach(${node.obj}, function(${node.val}${node.key ? `, ${node.key}` : ''}) {`)
-      if (node.block) {
-        processBlock(node.block)
-      }
+    if (node.block) {
+      processBlock(node.block, source)
+    }
     source.push('}) <= 0 ) {')
-      if (node.alternate) {
-        processBlock(node.alternate, source)
-      }
+    if (node.alternate) {
+      processBlock(node.alternate, source)
+    }
     source.push('}')
 
   }
 
-  const processWhile = (node) => {
-    Log.debug('- processWhile(node)')
+  const processWhile = (node, source) => {
+    Log.debug('- processWhile(node, source)')
     Log.debug(`- node.test=${node.test}`)
 
     source.push(`while ( ${node.test} ) {`)
-      if (node.block) {
-        processBlock(node.block)
-      }
+    if (node.block) {
+      processBlock(node.block, source)
+    }
     source.push(`}`)
 
   }
 
-  // const processExtends = (node) => {
-  //   Log.debug('- processExtends(node)')
-  // }
-
-  const processNamedBlock = (node) => {
-    Log.debug('- processNamedBlock(node)')
+  const processNamedBlock = (node, source) => {
+    Log.debug('- processNamedBlock(node, source)')
     Log.debug(`- node.name='${node.name}'`)
     Log.debug(`- node.mode='${node.mode}'`)
-
-    processBlock(node)
-
+    processBlock(node, source)
   }
 
-  const processFilter = (node) => {
-    Log.debug('- processFilter(node)')
+  const processFilter = (node, source) => {
+    Log.debug('- processFilter(node, source)')
     Log.debug(`- node.name='${node.name}'`)
 
     let parentTag = node.attrs
@@ -274,101 +250,77 @@ Transform.render = function (content, context, options) {
     Log.inspect('node (after)', node)
 
     if (parentTag) {
-      source.push(`${Package.name}Nodes.push(${Package.name}Utilities.create(${parentTag}, { 'innerHTML': '${EscapeJs(node.val)}' }, []))`)
+      source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(${Package.name}Utilities.create(${parentTag}, { 'innerHTML': '${EscapeJs(node.val)}' }, []))`)
     } else {
-      processNode(node)
+      processNode(node, source)
     }
 
   }
 
-  // const processInclude = (node) => {
-  //   Log.debug('- processInclude(node)')
-  //   Log.debug(`- node.file.path='${node.file.path}'`)
-  //   Log.debug(`- context.path='${context.path}'`)
-  //
-  //   // let path = Path.join(Path.dirname(context.path), node.file.path)
-  //   // let content = FileSystem.readFileSync(path, {
-  //   //   'encoding': 'utf-8'
-  //   // })
-  //   //
-  //   // // source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat((function(data) {`)
-  //   // source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(`)
-  //   // // source.push('')
-  //   // source.push(this.render(content, {
-  //   //   'path': path
-  //   // }, options))
-  //   // // source.push('')
-  //   // // source.push('})(data))')
-  //   // source.push(')')
-  //
-  // }
-
-  // const processRawInclude = (node) => {
-  //   Log.debug('- processRawInclude(node)')
-  //   Log.debug(`- node.file.path='${node.file.path}'`)
-  //   Log.debug(`- context.path='${context.path}'`)
-  //
-  //   // let path = Path.join(Path.dirname(context.path), node.file.path)
-  //   // let content = FileSystem.readFileSync(path, {
-  //   //   'encoding': 'utf-8'
-  //   // })
-  //   //
-  //   // source.push(`${Package.name}Nodes.push('${EscapeJs(content)}')`)
-  //
-  // }
-
-  const processMixin = (node) => {
-    Log.debug('- processMixin(node)')
+  const processMixin = (node, source) => {
+    Log.debug('- processMixin(node, source)')
     Log.debug(`- node.name='${node.name}'`)
     Log.debug(`- node.call=${node.call}`)
 
     if (node.call) {
 
-      source.push(`;(() => {`)
+      // source.push(`;(() => {`)
+      //
+      // if (node.attrs.length > 0) {
+      //   source.push(`let ${Package.name}Attributes = {}`)
+      //   source.push(`let ${Package.name}AttributeName`)
+      //   source.push(`let ${Package.name}AttributeValue`)
+      // }
+      //
+      // node.attrs.forEach((attribute) => processAttribute(attribute, source, false))
+      //
+      // if (node.block &&
+      //     node.block.nodes.length > 0) {
+      //   source.push(`let ${Package.name}Block = []`)
+      //   source.push(`${Package.name}Block = ${Package.name}Block.concat((() => {`)
+      //   source.push(`let ${Package.name}Nodes = []`)
+      //   node.block.nodes.forEach((blockNodes) => processNode(blockNodes, source))
+      //   source.push(`return ${Package.name}Nodes`)
+      //   source.push('})())')
+      // }
+      //
+      // source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(`)
+      //   source.push(`${Package.name}Mixin_${Identifier(node.name)}(`)
+      //     source.push(`${node.attrs.length ? `${Package.name}Attributes` : '{}'}, `)
+      //     source.push(`${node.block && node.block.nodes.length ? `${Package.name}Block` : 'null'}`)
+      //     source.push(`${node.args ? `, ${node.args}` : ''}))`)
+      //
+      // source.push('})()')
 
-      if (node.attrs.length > 0) {
-        source.push(`let ${Package.name}Attributes = {}`)
-        source.push(`let ${Package.name}AttributeName`)
-        source.push(`let ${Package.name}AttributeValue`)
-      }
+      let attributesSource = []
+      processAttributes(node, attributesSource, false)
 
-      node.attrs.forEach((attribute) => processAttribute(attribute, false))
-
-      if (node.block &&
-          node.block.nodes.length > 0) {
-        source.push(`let ${Package.name}Block = []`)
-        source.push(`${Package.name}Block = ${Package.name}Block.concat((() => {`)
-        source.push(`let ${Package.name}Nodes = []`)
-        node.block.nodes.forEach((blockNodes) => processNode(blockNodes, source))
-        source.push(`return ${Package.name}Nodes`)
-        source.push('})())')
-      }
+      let blockSource = []
+      processNodes(node, blockSource)
 
       source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(`)
-        source.push(`${Package.name}Mixin_${Identifier(node.name)}(`)
-          source.push(`${node.attrs.length ? `${Package.name}Attributes` : '{}'}, `)
-          source.push(`${node.block && node.block.nodes.length ? `${Package.name}Block` : 'null'}`)
-          source.push(`${node.args ? `, ${node.args}` : ''}))`)
-
-      source.push('})()')
+      source.push(`${Package.name}Mixin_${Identifier(node.name)}(`)
+      source.push(`${attributesSource.join('\n')}, `)
+      source.push(`${blockSource.join('\n')}`)
+      source.push(`${node.args ? `, ${node.args}` : ''}))`)
 
     } else {
       source.push(`function ${Package.name}Mixin_${Identifier(node.name)}(attributes, block${node.args ? `, ${node.args}` : ''}) {`)
       source.push(`let ${Package.name}Nodes = []`)
-      node.block.nodes.forEach((childNode) => processNode(childNode))
+      processBlock(node.block, source)
       source.push(`return ${Package.name}Nodes`)
       source.push('}')
     }
 
   }
 
-  const processMixinBlock = (node) => {
-    Log.debug('- processMixinBlock(node)')
+  const processMixinBlock = (node, source) => {
+    Log.debug('- processMixinBlock(node, source)')
     source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(block)`)
   }
 
-  const processTag = (node) => {
-    Log.debug('- processTag(node)')
+  const processTag = (node, source) => {
+    Log.debug('- processTag(node, source)')
     Log.debug(`- node.selfClosing=${node.selfClosing}`)
     Log.debug(`- node.name='${node.name}'`)
 
@@ -376,93 +328,178 @@ Transform.render = function (content, context, options) {
       throw new UnSupportedError('Self-closing tags are unsupported.')
     } else {
 
-      source.push(';(() => {')
+      // source.push(';(() => {')
+      //
+      // if (node.attrs.length > 0 ||
+      //     node.attributeBlocks.length > 0) {
+      //   source.push(`let ${Package.name}Attributes = {}`)
+      //   source.push(`let ${Package.name}AttributeName`)
+      //   source.push(`let ${Package.name}AttributeValue`)
+      // }
+      //
+      // if (node.attributeBlocks.length > 0) {
+      //   source.push(`let ${Package.name}AttributeBlock`)
+      // }
+      //
+      // node.attrs.forEach((attribute) => processAttribute(attribute))
+      // node.attributeBlocks.forEach((attributeBlock) => processAttributeBlock(attributeBlock))
+      //
+      // if (node.block.nodes.length > 0) {
+      //   source.push(`let ${Package.name}Children = []`)
+      //   source.push(`${Package.name}Children = ${Package.name}Children.concat((() => {`)
+      //   source.push(`let ${Package.name}Nodes = []`)
+      //   node.block.nodes.forEach((childNode) => processNode(childNode))
+      //   source.push(`return ${Package.name}Nodes`)
+      //   source.push('})())')
+      // }
+      //
+      // source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(`)
+      //   source.push(`${Package.name}Utilities.create(`)
+      //     source.push(`'${node.name}', `)
+      //     source.push(`${node.attrs.length > 0 || node.attributeBlocks.length > 0 ? `${Package.name}Attributes` : '{}'}, `)
+      //     source.push(`${node.block.nodes.length > 0 ? `${Package.name}Children` : '[]'}))`)
+      //
+      // source.push('})()')
 
-      if (node.attrs.length > 0 ||
-          node.attributeBlocks.length > 0) {
-        source.push(`let ${Package.name}Attributes = {}`)
-        source.push(`let ${Package.name}AttributeName`)
-        source.push(`let ${Package.name}AttributeValue`)
-      }
+      let attributesSource = []
+      processAttributes(node, attributesSource, true)
 
-      if (node.attributeBlocks.length > 0) {
-        source.push(`let ${Package.name}AttributeBlock`)
-      }
+      let childrenSource = []
+      processNodes(node, childrenSource)
 
-      node.attrs.forEach((attribute) => processAttribute(attribute))
-      node.attributeBlocks.forEach((attributeBlock) => processAttributeBlock(attributeBlock))
+      source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(`)
+      source.push(`${Package.name}Utilities.create(`)
+      source.push(`'${node.name}', `)
+      source.push(`${attributesSource.join('\n')}, `)
+      source.push(`${childrenSource.join('\n')}))`)
 
-      if (node.block.nodes.length > 0) {
-        source.push(`let ${Package.name}Children = []`)
-        source.push(`${Package.name}Children = ${Package.name}Children.concat((() => {`)
-        source.push(`let ${Package.name}Nodes = []`)
-        node.block.nodes.forEach((childNode) => processNode(childNode))
-        source.push(`return ${Package.name}Nodes`)
-        source.push('})())')
-      }
+    }
 
-      source.push(`${Package.name}Nodes.push(`)
-        source.push(`${Package.name}Utilities.create(`)
-          source.push(`'${node.name}', `)
-          source.push(`${node.attrs.length > 0 || node.attributeBlocks.length > 0 ? `${Package.name}Attributes` : '{}'}, `)
-          source.push(`${node.block.nodes.length > 0 ? `${Package.name}Children` : '[]'}))`)
+  }
 
+  // const processAttribute = (attribute, source, isMapped = true) => {
+  //   Log.debug('- processAttribute(attribute)')
+  //   Log.debug(`- attribute.name='${attribute.name}'`)
+  //   Log.debug(`- attribute.val=${attribute.val}`)
+  //   Log.debug(`- isMapped=${isMapped}`)
+  //
+  //   // if (isMapped) {
+  //   //   source.push(`${Package.name}AttributeName = ${Package.name}Utilities.mapAttributeName('${attribute.name}')`)
+  //   // } else {
+  //   //   source.push(`${Package.name}AttributeName = '${attribute.name}'`)
+  //   // }
+  //   //
+  //   // source.push(`${Package.name}AttributeValue = ${Package.name}Utilities.renderAttributeValue(${Package.name}AttributeName, ${attribute.val}, ${Package.name}Attributes[${Package.name}AttributeName])`)
+  //   //
+  //   // source.push(`if (${Package.name}AttributeValue) {`)
+  //   //   if (attribute.mustEscape) {
+  //   //     source.push(`${Package.name}Attributes[${Package.name}AttributeName] = ${Package.name}Utilities.escape(${Package.name}AttributeValue)`)
+  //   //   } else {
+  //   //     source.push(`${Package.name}Attributes[${Package.name}AttributeName] = ${Package.name}AttributeValue`)
+  //   //   }
+  //   // source.push('}')
+  //
+  //   source.push(`${Package.name}Utilities.addAttribute('${attribute.name}', ${attribute.val}, ${Package.name}Attributes, ${isMapped})`)
+  //
+  // }
+
+  const processAttributes = (node, source, isMapped = true) => {
+    Log.debug(`- processAttributes(node, source, ${isMapped})`)
+
+    if (node.attrs.length > 0 ||
+        node.attributeBlocks.length > 0) {
+
+      source.push('(() => {')
+
+      source.push(`let ${Package.name}Attributes = {}`)
+
+      node.attrs.forEach((attribute) => {
+        processAttribute(attribute, source, isMapped)
+      })
+
+      processAttributeBlocks(node, source)
+
+      source.push(`return ${Package.name}Attributes`)
       source.push('})()')
 
+    } else {
+      // source.push('{}')
+      source.push('null')
     }
 
   }
 
-  const processAttribute = (attribute, isMapped = true) => {
-    Log.debug('- processAttribute(attribute)')
+  const processAttribute = (attribute, source, isMapped = true) => {
+    Log.debug(`- processAttribute(attribute, source, ${isMapped})`)
     Log.debug(`- attribute.name='${attribute.name}'`)
     Log.debug(`- attribute.val=${attribute.val}`)
-    Log.debug(`- isMapped=${isMapped}`)
+    source.push(`${Package.name}Utilities.addAttribute('${attribute.name}', ${attribute.val}, ${Package.name}Attributes, ${isMapped}, ${attribute.mustEscape})`)
+  }
 
-    if (isMapped) {
-      source.push(`${Package.name}AttributeName = ${Package.name}Utilities.mapAttributeName('${attribute.name}')`)
-    } else {
-      source.push(`${Package.name}AttributeName = '${attribute.name}'`)
-    }
+  // const processAttributeBlock = (attributeBlock, source) => {
+  //   Log.debug('- processAttributeBlock(attributeBlock)')
+  //   Log.inspect('attributeBlock', attributeBlock)
+  //
+  //   // source.push(`${Package.name}AttributeBlock = ${attributeBlock}`)
+  //   //
+  //   // source.push(`${Package.name}Utilities.forEach(${Package.name}AttributeBlock, function(value, key) {`)
+  //   // source.push(`${Package.name}AttributeName = ${Package.name}Utilities.mapAttributeName(key)`)
+  //   // source.push(`${Package.name}AttributeValue = ${Package.name}Utilities.renderAttributeValue(${Package.name}AttributeName, value, ${Package.name}Attributes[${Package.name}AttributeName])`)
+  //   //
+  //   // source.push(`if (${Package.name}AttributeValue) {`)
+  //   // source.push(`${Package.name}Attributes[${Package.name}AttributeName] = ${Package.name}AttributeValue`)
+  //   // source.push('}')
+  //   //
+  //   // source.push('})')
+  //
+  //   source.push(`${Package.name}Utilities.forEach(${attributeBlock}, function(value, key) {`)
+  //     source.push(`${Package.name}Utilities.addAttribute(key, value, ${Package.name}Attributes)`)
+  //   source.push('})')
+  //
+  // }
 
-    source.push(`${Package.name}AttributeValue = ${Package.name}Utilities.renderAttributeValue(${Package.name}AttributeName, ${attribute.val}, ${Package.name}Attributes[${Package.name}AttributeName])`)
+  const processAttributeBlocks = (node, source) => {
+    Log.debug('- processAttributeBlocks(node, source)')
 
-    source.push(`if (${Package.name}AttributeValue) {`)
-      if (attribute.mustEscape) {
-        source.push(`${Package.name}Attributes[${Package.name}AttributeName] = ${Package.name}Utilities.escape(${Package.name}AttributeValue)`)
-      } else {
-        source.push(`${Package.name}Attributes[${Package.name}AttributeName] = ${Package.name}AttributeValue`)
-      }
-    source.push('}')
+    node.attributeBlocks.forEach((attributeBlock) => {
+      processAttributeBlock(attributeBlock, source)
+    })
 
   }
 
-  const processAttributeBlock = (attributeBlock) => {
-    Log.debug('- processAttributeBlock(attributeBlock)')
+  const processAttributeBlock = (attributeBlock, source) => {
+    Log.debug('- processAttributeBlock(attributeBlock, source)')
     Log.inspect('attributeBlock', attributeBlock)
 
-    source.push(`${Package.name}AttributeBlock = ${attributeBlock}`)
-
-    // source.push(`Object.keys(${Package.name}AttributeBlock).forEach(function(key) {`)
-    // source.push(`${Package.name}AttributeName = ${Package.name}Utilities.mapAttributeName(key)`)
-    // source.push(`${Package.name}AttributeValue = ${Package.name}Utilities.renderAttributeValue(${Package.name}AttributeName, ${Package.name}AttributeBlock[key], ${Package.name}Attributes[${Package.name}AttributeName])`)
-
-    source.push(`${Package.name}Utilities.forEach(${Package.name}AttributeBlock, function(value, key) {`)
-    source.push(`${Package.name}AttributeName = ${Package.name}Utilities.mapAttributeName(key)`)
-    source.push(`${Package.name}AttributeValue = ${Package.name}Utilities.renderAttributeValue(${Package.name}AttributeName, value, ${Package.name}Attributes[${Package.name}AttributeName])`)
-
-    source.push(`if (${Package.name}AttributeValue) {`)
-    source.push(`${Package.name}Attributes[${Package.name}AttributeName] = ${Package.name}AttributeValue`)
-    source.push('}')
-
+    source.push(`${Package.name}Utilities.forEach(${attributeBlock}, function(value, key) {`)
+    source.push(`${Package.name}Utilities.addAttribute(key, value, ${Package.name}Attributes)`)
     source.push('})')
 
   }
 
-  const processText = (node) => {
-    Log.debug('- processText(node)')
+  const processNodes = (node, source) => {
+    Log.debug('- processNodes(node, source)')
+
+    if (node.block &&
+        node.block.nodes.length > 0) {
+
+      source.push('(() => {')
+      source.push(`let ${Package.name}Nodes = []`)
+      processBlock(node.block, source)
+      source.push(`return ${Package.name}Nodes`)
+      source.push('})()')
+
+    } else {
+      // source.push('[]')
+      source.push('null')
+    }
+
+  }
+
+  const processText = (node, source) => {
+    Log.debug('- processText(node, source)')
     Log.debug(`- node.val='${EscapeJs(node.val)}'`)
-    source.push(`${Package.name}Nodes.push('${EscapeJs(node.val)}')`)
+    source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat('${EscapeJs(node.val)}')`)
   }
 
   const withData = (source) => {
@@ -480,19 +517,7 @@ Transform.render = function (content, context, options) {
 
   }
 
-  // let nodes =
-  //   Parser(
-  //     Lexer(
-  //       content,
-  //       {
-  //         'filename': context.path
-  //       }),
-  //     {
-  //         'filename': context.path
-  //     }
-  //   )
-
-  let nodes =
+  let root =
     Linker(
       Loader(
         Parser(
@@ -509,23 +534,22 @@ Transform.render = function (content, context, options) {
           'parse': Parser
         }))
 
-  Log.inspect('nodes', nodes)
+  Log.inspect('root', root)
 
-  let source = []
+  let renderSource = []
 
-  source.push(`const ${Package.name}Utilities = require('${options.require && options.require.utilities ? options.require.utilities : `${Package.name}/library/utilities`}')`)
-  source.push('')
-  source.push(`let ${Package.name}Nodes = []`)
-  processNode(nodes, source)
-  source.push('')
-  source.push(`return ${Package.name}Nodes[0]`)
+  renderSource.push(`const ${Package.name}Utilities = require('${options.require && options.require.utilities ? options.require.utilities : `${Package.name}/library/utilities`}')`)
+  renderSource.push('')
+  renderSource.push(`let ${Package.name}Nodes = []`)
+  processNode(root, renderSource)
+  renderSource.push(`return ${Package.name}Nodes[0]`)
 
-  source = withData(source.join('\n'))
+  renderSource = withData(renderSource.join('\n'))
 
   Log.debug('< Transform.render(content, context, options) { ... }')
-  Log.inspect('source', source)
+  // Log.inspect('renderSource', renderSource)
 
-  return source
+  return renderSource
 
 }
 
@@ -590,10 +614,11 @@ Transform.compilePath = function (path, options) {
   source = this.format(source.join('\n'))
 
   let _source = []
+
   _source.push('\'use strict\';')
   _source.push('')
   _source.push(source)
-  _source.push('')
+  // _source.push('')
   _source.push(`return ${Package.name}Render(data)`)
 
   _source = _source.join('\n')
