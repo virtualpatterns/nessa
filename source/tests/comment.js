@@ -5,19 +5,19 @@ describe('Comment', () => {
 
   It.shouldEqual([
     {
-      'path': Path.join('comment', 'default-unbuffered.pug'),
+      'resourcePath': Path.join('comment', 'default-unbuffered.pug'),
       'matchFn': '<p>foo</p>',
     },
     {
-      'path': Path.join('comment', 'default-buffered.pug'),
+      'resourcePath': Path.join('comment', 'default-buffered.pug'),
       'matchFn': '<p>foo</p>',
     },
     {
-      'path': Path.join('comment', 'block-buffered-comment.pug'),
+      'resourcePath': Path.join('comment', 'block-buffered-comment.pug'),
       'matchFn': '<body></body>',
     },
     {
-      'path': Path.join('comment', 'block-unbuffered-comment.pug'),
+      'resourcePath': Path.join('comment', 'block-unbuffered-comment.pug'),
       'matchFn': '<body></body>',
     },
   ])

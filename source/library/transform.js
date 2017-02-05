@@ -250,7 +250,7 @@ Transform.render = function (content, context, options) {
     Log.inspect('node (after)', node)
 
     if (parentTag) {
-      source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(${Package.name}Utilities.create(${parentTag}, { 'innerHTML': '${EscapeJs(node.val)}' }, []))`)
+      source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(${Package.name}Utilities.createTag(${parentTag}, { 'innerHTML': '${EscapeJs(node.val)}' }, []))`)
     } else {
       processNode(node, source)
     }
@@ -354,7 +354,7 @@ Transform.render = function (content, context, options) {
       // }
       //
       // source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(`)
-      //   source.push(`${Package.name}Utilities.create(`)
+      //   source.push(`${Package.name}Utilities.createTag(`)
       //     source.push(`'${node.name}', `)
       //     source.push(`${node.attrs.length > 0 || node.attributeBlocks.length > 0 ? `${Package.name}Attributes` : '{}'}, `)
       //     source.push(`${node.block.nodes.length > 0 ? `${Package.name}Children` : '[]'}))`)
@@ -367,11 +367,23 @@ Transform.render = function (content, context, options) {
       let childrenSource = []
       processNodes(node, childrenSource)
 
-      source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(`)
-      source.push(`${Package.name}Utilities.create(`)
-      source.push(`'${node.name}', `)
-      source.push(`${attributesSource.join('\n')}, `)
-      source.push(`${childrenSource.join('\n')}))`)
+      if (node.name[0] == node.name[0].toUpperCase()) {
+
+        source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(`)
+        source.push(`${Package.name}Utilities.createElement(`)
+        source.push(`${node.name}, `)
+        source.push(`${attributesSource.join('\n')}, `)
+        source.push(`${childrenSource.join('\n')}))`)
+
+      } else {
+
+        source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(`)
+        source.push(`${Package.name}Utilities.createTag(`)
+        source.push(`'${node.name}', `)
+        source.push(`${attributesSource.join('\n')}, `)
+        source.push(`${childrenSource.join('\n')}))`)
+
+      }
 
     }
 
@@ -615,10 +627,7 @@ Transform.compilePath = function (path, options) {
 
   let _source = []
 
-  _source.push('\'use strict\';')
-  _source.push('')
   _source.push(source)
-  // _source.push('')
   _source.push(`return ${Package.name}Render(data)`)
 
   _source = _source.join('\n')
@@ -636,14 +645,14 @@ Transform.format = function (source) {
 
   source = Compile(source, {
     'presets': [
-      'es2015-nostrict'
+      'es2015'
     ]
   }).code
 
   // Log.inspect('source (during)', source)
 
   source = Format(source, {
-    'printWidth': 160,
+    'printWidth': 100,
     'tabWidth': 2,
     'singleQuote': true,
     'trailingComma': false,

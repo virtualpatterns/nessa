@@ -5,10 +5,10 @@ describe('Include', () => {
 
   It.shouldEqual([
     {
-      'path': Path.join('include', 'default.pug'),
+      'resourcePath': Path.join('include', 'default.pug'),
       'matchFn': '<div><p>Welcome</p></div>'    },
     {
-      'path': Path.join('include', 'plain-text.pug'),
+      'resourcePath': Path.join('include', 'plain-text.pug'),
       'matchFn': '<div>This is plain text\n</div>'
     },
   ])

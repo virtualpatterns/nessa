@@ -34,7 +34,7 @@ module.exports = {
     new WebPack.IgnorePlugin(/^winston|\.\/process$/)
   ],
   'nessa': {
-    'debug': true,
+    'isDebugged': true,
     'logPath': LOG_PATH,
     'require': {
       'utilities': Path.join(__dirname, 'library', 'utilities')

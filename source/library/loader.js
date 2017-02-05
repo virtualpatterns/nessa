@@ -8,7 +8,8 @@ module.exports = function (content) {
 
   let options = Loader.getLoaderConfig(this, Package.name)
 
-  if (options.debug) {
+  if (options.debug ||
+      options.isDebugged) {
     if (options.logPath) {
       Log.addFile(options.logPath)
     } else {
@@ -29,7 +30,8 @@ module.exports = function (content) {
   }
   finally {
 
-    if (options.debug) {
+    if (options.debug ||
+        options.isDebugged) {
       if (options.logPath) {
         Log.removeFile(options.logPath)
       } else {

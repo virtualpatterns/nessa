@@ -11,10 +11,24 @@ const ATTRIBUTE_MAP = {
 
 let Utilities = Object.create({})
 
-Utilities.create = function (name, attributes, children) {
-  Log.debug(`- Utilities.create('${name}', attributes, children) { ... }`)
+Utilities.createTag = function (name, attributes, children) {
+  Log.debug(`- Utilities.createTag('${name}', attributes, children) { ... }`)
   // Log.inspect('attributes', attributes)
   return Create(name, attributes, children)
+}
+
+Utilities.createElement = function (element, attributes, children) {
+  Log.debug('- Utilities.createElement(element, attributes, children) { ... }')
+  Log.inspect('attributes', attributes)
+
+  if (Is.function(element)) {
+    return element(attributes)
+  } else if (Is.function(element.render)) {
+    return element.render(attributes)
+  } else {
+    return element
+  }
+
 }
 
 Utilities.addAttribute = function (name, value, attributes, isMapped = true, isEscaped = true) {

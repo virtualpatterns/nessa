@@ -5,19 +5,19 @@ describe('Inheritance', () => {
 
   It.shouldEqual([
     {
-      'path': Path.join('inheritance', 'default.pug'),
+      'resourcePath': Path.join('inheritance', 'default.pug'),
       'matchFn': '<div class="article"><div class="subject">Subject</div><div class="content"><div class="sub-article"><div class="sub-subject">Sub-Subject</div><div class="sub-content">You rock!</div></div></div></div>'
     },
     {
-      'path': Path.join('inheritance', 'default-content.pug'),
+      'resourcePath': Path.join('inheritance', 'default-content.pug'),
       'matchFn': '<div>Default Sub-Content</div>'
     },
     {
-      'path': Path.join('inheritance', 'block-append.pug'),
+      'resourcePath': Path.join('inheritance', 'block-append.pug'),
       'matchFn': '<ul><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li></ul>'
     },
     {
-      'path': Path.join('inheritance', 'block-prepend.pug'),
+      'resourcePath': Path.join('inheritance', 'block-prepend.pug'),
       'matchFn': '<ul><li>-2</li><li>-1</li><li>0</li><li>1</li><li>2</li></ul>'
     },
   ])

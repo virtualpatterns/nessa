@@ -42,7 +42,7 @@ var webpackConfig = {
   },
 
   'nessa': {
-    'debug': true,
+    'isDebugged': true,
     'logPath': './process/logs/nessa.webpack.log',
     'require': {
       'utilities': 'nessa/library/utilities'

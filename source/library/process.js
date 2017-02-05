@@ -26,7 +26,7 @@ Process.when = function (timeout, maximumDuration, testFn) {
           setTimeout(() => waitLoop(start), timeout)
         } else if (duration >= maximumDuration) {
           Log.error('< Process.when(%d, %d, testFn) { ... } duration=%d', timeout, maximumDuration, duration)
-          reject(new ProcessError('Duration exceeded.'))
+          reject(new ProcessError('The duration was exceeded.'))
         } else {
           Log.debug('< Process.when(%d, %d, testFn) { ... }', timeout, maximumDuration)
           resolve()

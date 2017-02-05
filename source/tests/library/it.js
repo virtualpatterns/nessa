@@ -18,17 +18,17 @@ It.shouldEqual = function (tests) {
 
   tests.forEach((test) => {
 
-    (test.itFn || it)(`should produce the correct output for ${test.path}`, () => {
+    (test.itFn || it)(`should produce the correct output for ${test.resourcePath}`, () => {
 
-      if (test.debug) {
-        Log.debug(`- should produce the correct output for ${test.path}`)
+      if (test.isDebugged) {
+        Log.debug(`- should produce the correct output for ${test.resourcePath}`)
         Log.inspect('data', test.data || {})
       }
 
-      let virtualContent = Transform.compilePath(Path.join(RESOURCES_PATH, test.path), Configuration[Package.name])(test.data || {})
+      let virtualContent = this.compileResource(test.resourcePath)(test.data || {})
       let realContent = VirtualNodeToHTML(virtualContent)
 
-      if (test.debug) {
+      if (test.isDebugged) {
         Log.inspect('virtualContent', virtualContent)
         Log.inspect('realContent', realContent)
       }
@@ -45,14 +45,25 @@ It.shouldEqual = function (tests) {
 
 }
 
+It.compileResource = function(resourcePath) {
+  return Transform.compilePath(Path.join(RESOURCES_PATH, resourcePath), Configuration[Package.name])
+}
+
 It.shouldBeUnSupported = function (tests) {
 
   tests.forEach((test) => {
 
-    (test.itFn || it)(`should be unsupported for ${test.path}`, () => {
+    (test.itFn || it)(`should be unsupported for ${test.resourcePath}`, () => {
+
+      if (test.isDebugged) {
+        Log.debug(`- should be unsupported for ${test.resourcePath}`)
+        Log.inspect('data', test.data || {})
+      }
+
       Assert.throws(() => {
-        Transform.compilePath(Path.join(RESOURCES_PATH, test.path), Configuration[Package.name])(test.data || {})
+        this.compileResource(test.resourcePath)(test.data || {})
       }, UnSupportedError)
+
     })
 
   })
