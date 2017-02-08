@@ -1,4 +1,23 @@
 {
+  "env": {
+    "pre-build": {
+    },
+    "post-build": {
+      "plugins": [
+        [
+          "./library/transpiler",
+          {
+            "isDebugged": true,
+            "logPath": "./process/logs/nessa.babel.log",
+            "require": {
+              "utilities": "./library/utilities"
+            },
+            "test": "\\.babel.pug$"
+          }
+        ]
+      ]
+    }
+  },
   "plugins": [],
   "presets": [
     "es2015"

@@ -188,6 +188,7 @@ Log.inspect = function (...parameters) {
   let level = null
   let name = null
   let object = null
+  let depth = null
 
   switch (parameters.length) {
     case 0:
@@ -196,23 +197,32 @@ Log.inspect = function (...parameters) {
       level = 'debug'
       name = 'Log.inspect(...parameters) { ... }'
       object = parameters[0]
+      depth = null
       break
     case 2:
       level = 'debug'
       name = parameters[0]
       object = parameters[1]
+      depth = null
+      break
+    case 3:
+      level = 'debug'
+      name = parameters[0]
+      object = parameters[1]
+      depth = parameters[2]
       break
     default:
       level = parameters[0]
       name = parameters[1]
       object = parameters[2]
+      depth = parameters[3]
   }
 
   if (Is.string(object)) {
     this.log(level, `- ${name}\n\n${object}\n`)
   } else {
     this.log(level, `- ${name}\n\n${object ? Utilities.inspect(object, {
-      'depth': null,
+      'depth': depth,
       'showHidden': true
     }) : 'undefined'}\n`)
   }

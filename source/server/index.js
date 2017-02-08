@@ -17,7 +17,7 @@ Log.addConsole()
 Log.addFile(LOG_PATH)
 Log.line()
 
-let server = Server.createServer()
+const server = Server.createServer()
 
 server.on('uncaughtException', (request, response, route, error) => {
   Log.debug(`- server.on('uncaughtException', (request, response, route, error) => { ... })\n\n${error.stack}\n`)

@@ -1,13 +1,13 @@
 import _Path from 'path'
-import Resolve from 'resolve-path'
+import IsRelative from 'is-relative'
 
 import Process from './process'
 
-let Path = Object.create(_Path);
+const Path = Object.create(_Path);
 
-Path.resolve = function (path) {
-  return this.isAbsolute(path) ? path : Resolve(path);
-};
+Path.isRelative = function(path) {
+  return IsRelative(path)
+}
 
 Path.trim = function (path) {
   return path.replace(Process.cwd(), '.');

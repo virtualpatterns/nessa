@@ -12,7 +12,7 @@ import UnSupportedError from '../../library/errors/unsupported-error'
 
 const RESOURCES_PATH = Path.join(__dirname, '..', 'resources')
 
-let It = Object.create({})
+const It = Object.create({})
 
 It.shouldEqual = function (tests) {
 
@@ -45,10 +45,6 @@ It.shouldEqual = function (tests) {
 
 }
 
-It.compileResource = function(resourcePath) {
-  return Transform.compilePath(Path.join(RESOURCES_PATH, resourcePath), Configuration[Package.name])
-}
-
 It.shouldBeUnSupported = function (tests) {
 
   tests.forEach((test) => {
@@ -66,6 +62,19 @@ It.shouldBeUnSupported = function (tests) {
 
     })
 
+  })
+
+}
+
+It.compileResource = function(resourcePath) {
+
+  let options = Configuration[Package.name]
+
+  return Transform.compilePath(Path.join(RESOURCES_PATH, resourcePath), {
+    'isInline': false,
+    'require': {
+      'utilities': options.require && options.require.utilities ? options.require.utilities : undefined
+    }
   })
 
 }

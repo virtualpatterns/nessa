@@ -7,7 +7,7 @@ import ProcessError from './errors/process-error'
 
 const EXIT_TIMEOUT = 5000
 
-let Process = Object.create(process)
+const Process = Object.create(process)
 
 Process.when = function (timeout, maximumDuration, testFn) {
 

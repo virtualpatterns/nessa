@@ -10,7 +10,7 @@ import Process from './process'
 import ArgumentError from './errors/argument-error'
 import ProcessError from './errors/process-error'
 
-let FileSystem = Object.create(_FileSystem)
+const FileSystem = Object.create(_FileSystem)
 
 FileSystem.mkdirp = Directory
 FileSystem.touch = Touch

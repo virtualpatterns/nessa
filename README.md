@@ -2,9 +2,7 @@
 
 *_Nessa_ was an Ainu and a Valië and was ranked the least among the Valar. She was notable for her speed, being fast "as an arrow in movement", for which reason she was called _Nessa the Swift_.*
 
-A [Webpack](https://webpack.github.io/) loader which translates [Pug](http://pugjs.org/) templates into Hyperscript for
-[virtual-dom](https://github.com/Matt-Esch/virtual-dom) diffing/rendering
-flows.
+A [Babel](https://babeljs.io/) plug-in and [Webpack](https://webpack.github.io/) loader which translate [Pug](http://pugjs.org/) templates into Hyperscript for [virtual-dom](https://github.com/Matt-Esch/virtual-dom) diffing/rendering flows.
 
 [![NPM](https://nodei.co/npm/nessa.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nessa/)
 
@@ -14,7 +12,15 @@ Add `nessa` to dev dependencies in `package.json`:
 
     npm install --save-dev nessa
 
-Tell Webpack to use this loader for `.pug` files, in `webpack.config.js`:
+Either tell Babel to use this plug-in for `.pug` files in `.babelrc`:
+
+```javascript
+"plugins": [
+  "nessa/library/transpiler",
+]
+```
+
+Or tell Webpack to use this loader for `.pug` files in `webpack.config.js`:
 
 ```javascript
 var webpackConfig = {
@@ -22,7 +28,7 @@ var webpackConfig = {
     loaders: [
       {
         test: /\.pug$/,
-        loader: 'nessa/library/loader',
+        \: 'nessa/library/loader',
       },
     ],
   },
@@ -34,7 +40,32 @@ var webpackConfig = {
 
 ## Configuration
 
-The recommended way to configure options for `nessa` is with a top-level `nessa` object, e.g.:
+The recommended way to configure Babel options for `nessa` is with plug-in options, e.g.:
+
+```javascript
+"plugins": [
+  [
+    "nessa/library/transpiler",
+    {
+      "isDebugged": true,
+      "logPath": "./process/logs/nessa.babel.log",
+      "require": {
+        "utilities": "./library/utilities"
+      },
+      "test": "\\.pug$"
+    }
+  ]
+]
+```
+
+The available options are:
+- `isDebugged`
+- `logPath`
+- `require.utilities`
+- `test`
+
+The recommended way to configure Webpack options for `nessa` is with a top-level `nessa` object, e.g.:
+
 ```javascript
 var webpackConfig = {
   module: {
@@ -54,15 +85,13 @@ var webpackConfig = {
 ```
 
 The available options are:
-- `debug`
+- `isDebugged`
 - `logPath`
-- `utilities`
-
-See the [nessa documentation](https://github.com/virtualpatterns/nessa#api) for an explanation of the options.
+- `require.utilities`
 
 ## Usage
 
-With Webpack configured as above, simply import/require a Pug file to
+With Babel or Webpack configured as above, simply import/require a Pug file to
 access the compiled template function, which returns a virtual-dom `VNode`
 instead of HTML:
 

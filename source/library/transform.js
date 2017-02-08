@@ -14,10 +14,11 @@ import FileSystem from './file-system'
 import Log from './log'
 import Package from '../package.json'
 import Path from './path'
+import Process from './process'
 
 import UnSupportedError from './errors/unsupported-error'
 
-let Transform = Object.create({})
+const Transform = Object.create({})
 
 Transform.render = function (content, context, options) {
   Log.debug('> Transform.render(content, context, options) { ... }')
@@ -305,11 +306,13 @@ Transform.render = function (content, context, options) {
       source.push(`${node.args ? `, ${node.args}` : ''}))`)
 
     } else {
+
       source.push(`function ${Package.name}Mixin_${Identifier(node.name)}(attributes, block${node.args ? `, ${node.args}` : ''}) {`)
       source.push(`let ${Package.name}Nodes = []`)
       processBlock(node.block, source)
       source.push(`return ${Package.name}Nodes`)
       source.push('}')
+
     }
 
   }
@@ -323,6 +326,7 @@ Transform.render = function (content, context, options) {
     Log.debug('- processTag(node, source)')
     Log.debug(`- node.selfClosing=${node.selfClosing}`)
     Log.debug(`- node.name='${node.name}'`)
+    // Log.inspect('context', context)
 
     if (node.selfClosing) {
       throw new UnSupportedError('Self-closing tags are unsupported.')
@@ -369,6 +373,11 @@ Transform.render = function (content, context, options) {
 
       if (node.name[0] == node.name[0].toUpperCase()) {
 
+        if (options.isInline) {
+          context.elements = context.elements || []
+          context.elements.push(node.name)
+        }
+
         source.push(`${Package.name}Nodes = ${Package.name}Nodes.concat(`)
         source.push(`${Package.name}Utilities.createElement(`)
         source.push(`${node.name}, `)
@@ -387,33 +396,10 @@ Transform.render = function (content, context, options) {
 
     }
 
-  }
+    // Log.debug('< processTag(node, source)')
+    // Log.inspect('context', context)
 
-  // const processAttribute = (attribute, source, isMapped = true) => {
-  //   Log.debug('- processAttribute(attribute)')
-  //   Log.debug(`- attribute.name='${attribute.name}'`)
-  //   Log.debug(`- attribute.val=${attribute.val}`)
-  //   Log.debug(`- isMapped=${isMapped}`)
-  //
-  //   // if (isMapped) {
-  //   //   source.push(`${Package.name}AttributeName = ${Package.name}Utilities.mapAttributeName('${attribute.name}')`)
-  //   // } else {
-  //   //   source.push(`${Package.name}AttributeName = '${attribute.name}'`)
-  //   // }
-  //   //
-  //   // source.push(`${Package.name}AttributeValue = ${Package.name}Utilities.renderAttributeValue(${Package.name}AttributeName, ${attribute.val}, ${Package.name}Attributes[${Package.name}AttributeName])`)
-  //   //
-  //   // source.push(`if (${Package.name}AttributeValue) {`)
-  //   //   if (attribute.mustEscape) {
-  //   //     source.push(`${Package.name}Attributes[${Package.name}AttributeName] = ${Package.name}Utilities.escape(${Package.name}AttributeValue)`)
-  //   //   } else {
-  //   //     source.push(`${Package.name}Attributes[${Package.name}AttributeName] = ${Package.name}AttributeValue`)
-  //   //   }
-  //   // source.push('}')
-  //
-  //   source.push(`${Package.name}Utilities.addAttribute('${attribute.name}', ${attribute.val}, ${Package.name}Attributes, ${isMapped})`)
-  //
-  // }
+  }
 
   const processAttributes = (node, source, isMapped = true) => {
     Log.debug(`- processAttributes(node, source, ${isMapped})`)
@@ -447,28 +433,6 @@ Transform.render = function (content, context, options) {
     Log.debug(`- attribute.val=${attribute.val}`)
     source.push(`${Package.name}Utilities.addAttribute('${attribute.name}', ${attribute.val}, ${Package.name}Attributes, ${isMapped}, ${attribute.mustEscape})`)
   }
-
-  // const processAttributeBlock = (attributeBlock, source) => {
-  //   Log.debug('- processAttributeBlock(attributeBlock)')
-  //   Log.inspect('attributeBlock', attributeBlock)
-  //
-  //   // source.push(`${Package.name}AttributeBlock = ${attributeBlock}`)
-  //   //
-  //   // source.push(`${Package.name}Utilities.forEach(${Package.name}AttributeBlock, function(value, key) {`)
-  //   // source.push(`${Package.name}AttributeName = ${Package.name}Utilities.mapAttributeName(key)`)
-  //   // source.push(`${Package.name}AttributeValue = ${Package.name}Utilities.renderAttributeValue(${Package.name}AttributeName, value, ${Package.name}Attributes[${Package.name}AttributeName])`)
-  //   //
-  //   // source.push(`if (${Package.name}AttributeValue) {`)
-  //   // source.push(`${Package.name}Attributes[${Package.name}AttributeName] = ${Package.name}AttributeValue`)
-  //   // source.push('}')
-  //   //
-  //   // source.push('})')
-  //
-  //   source.push(`${Package.name}Utilities.forEach(${attributeBlock}, function(value, key) {`)
-  //     source.push(`${Package.name}Utilities.addAttribute(key, value, ${Package.name}Attributes)`)
-  //   source.push('})')
-  //
-  // }
 
   const processAttributeBlocks = (node, source) => {
     Log.debug('- processAttributeBlocks(node, source)')
@@ -516,11 +480,12 @@ Transform.render = function (content, context, options) {
 
   const withData = (source) => {
     Log.debug('> withData(source) { ... }')
+    Log.inspect('context', context)
     // Log.inspect('source (before)', source)
 
-    source = With('data', source, [
+    source = With('data', source, (context.elements || []).concat([
       'require'
-    ])
+    ]))
 
     Log.debug('< withData(source) { ... }')
     // Log.inspect('source (after)', source)
@@ -558,58 +523,39 @@ Transform.render = function (content, context, options) {
 
   renderSource = withData(renderSource.join('\n'))
 
-  Log.debug('< Transform.render(content, context, options) { ... }')
+  Log.debug('< Transform.render(content, options) { ... }')
   // Log.inspect('renderSource', renderSource)
 
   return renderSource
 
 }
 
-// Transform._render = function (content, context, options) {
-//   Log.debug('- Transform._render(content, context, options) { ... }')
-//
-//   let source = []
-//
-//   source.push('')
-//   // source.push(`let ${Package.name}Utilities = require('${options.require && options.require.utilities ? options.require.utilities : `${Package.name}/library/utilities`}')`)
-//   source.push(`const ${Package.name}Utilities = require('${options.require && options.require.utilities ? options.require.utilities : `${Package.name}/library/utilities`}')`)
-//   source.push('')
-//   // source.push(`return ${this.render(content, context, options)}`)
-//   source.push(this.render(content, context, options))
-//   source.push('')
-//
-//   source = source.join('\n')
-//
-//   Log.debug('> With(\'data\', source, ...)')
-//   // Log.inspect('source', source)
-//
-//   return With('data', source, [
-//     'Object',
-//     'require'
-//   ])
-//
-// }
-
 Transform.renderModule = function (content, context, options) {
   Log.debug('> Transform.renderModule(content, context, options) { ... }')
+
+  Transform.resolve(options)
 
   let source = []
 
   source.push('module.exports = function (data) {')
-  source.push(this.render(content, context, options))
+  source.push(this.render(content, context, Object.assign({
+    'isInline': false
+  }, options)))
   source.push('}')
 
   source = this.format(source.join('\n'))
 
-  Log.debug('< Transform.renderModule(content, context, options) { ... }')
+  Log.debug('< Transform.renderModule(content, options) { ... }')
   Log.inspect('source', source)
 
   return source
 
 }
 
-Transform.compilePath = function (path, options) {
-  Log.debug('> Transform.compilePath(path, options) { ... }')
+Transform.renderPath = function (path, options) {
+  Log.debug(`> Transform.renderPath('${Path.trim(path)}', options) { ... }`)
+
+  Transform.resolve(options)
 
   let content = FileSystem.readFileSync(path, {
     'encoding': 'utf-8'
@@ -620,22 +566,86 @@ Transform.compilePath = function (path, options) {
   source.push(`function ${Package.name}Render (data) {`)
   source.push(this.render(content, {
     'path': path
-  }, options))
+  }, Object.assign({
+    'isInline': true
+  }, options)))
+  source.push('}')
+
+  source = this.format(source.join('\n'))
+
+  Log.debug(`< Transform.renderPath('${Path.trim(path)}', options) { ... }`)
+  Log.inspect('source', source)
+
+  return source
+
+}
+
+Transform.compilePath = function (path, options) {
+  Log.debug(`> Transform.compilePath('${Path.trim(path)}', options) { ... }`)
+
+  Transform.resolve(options)
+
+  let content = FileSystem.readFileSync(path, {
+    'encoding': 'utf-8'
+  })
+
+  let source = []
+
+  source.push(`function ${Package.name}Render (data) {`)
+  source.push(this.render(content, {
+    'path': path
+  }, Object.assign({
+    'isInline': false
+  }, options)))
   source.push('}')
 
   source = this.format(source.join('\n'))
 
   let _source = []
 
+  _source.push('\'use strict\';')
+  _source.push('')
   _source.push(source)
-  _source.push(`return ${Package.name}Render(data)`)
+  _source.push(`return ${Package.name}Render(data);`)
 
   _source = _source.join('\n')
 
-  Log.debug('< Transform.compilePath(path, options) { ... }')
+  Log.debug(`< Transform.compilePath('${Path.trim(path)}', options) { ... }`)
   Log.inspect('_source', _source)
 
   return (new Function('require', 'data', _source)).bind({}, require)
+
+}
+
+Transform.resolve = function (options) {
+  Log.debug(`> Transform.resolve(options) { ... }`)
+  // Log.inspect('options', options)
+
+  if (options &&
+      options.require) {
+
+    for (let name in options.require) {
+
+      let path = options.require[name]
+
+      // path = "./library/utilities" ... relative to root, make absolute
+      // path = "/Users/home/babo/library/utilities" ... absolute, no change
+      // path = "abclibrary/utilities" ... library, use resolve
+
+      if (Path.isRelative(path)) {
+        options.require[name] = Path.resolve(Process.cwd(), path)
+      } else if (Path.isAbsolute(path)) {
+        // Do nothing
+      } else {
+        options.require[name] = require.resolve(path)
+      }
+
+    }
+
+  }
+
+  Log.debug(`< Transform.resolve(options) { ... }`)
+  Log.inspect('options', options)
 
 }
 
@@ -645,7 +655,7 @@ Transform.format = function (source) {
 
   source = Compile(source, {
     'presets': [
-      'es2015'
+      'es2015-without-strict'
     ]
   }).code
 
@@ -660,7 +670,7 @@ Transform.format = function (source) {
   })
 
   Log.debug('< Transform.format(source) { ... }')
-  // Log.inspect('source (after)', source)
+  Log.inspect('source (after)', source)
 
   return source
 

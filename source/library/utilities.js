@@ -9,7 +9,7 @@ const ATTRIBUTE_MAP = {
   'CLASS': 'className'
 }
 
-let Utilities = Object.create({})
+const Utilities = Object.create({})
 
 Utilities.createTag = function (name, attributes, children) {
   Log.debug(`- Utilities.createTag('${name}', attributes, children) { ... }`)

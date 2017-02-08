@@ -21,7 +21,7 @@ module.exports = {
   'module': {
     'loaders': [
       {
-        'test': /\.pug$/,
+        'test': /\.webpack.pug$/,
         'loader': Path.join(__dirname, 'library', 'loader'),
       }
     ]

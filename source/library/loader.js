@@ -25,7 +25,12 @@ module.exports = function (content) {
 
     return Transform.renderModule(content, {
       'path': this.resourcePath
-    }, options)
+    }, {
+      'isInline': false,
+      'require': {
+        'utilities': options.require && options.require.utilities ? options.require.utilities : undefined
+      }
+    })
 
   }
   finally {
