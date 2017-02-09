@@ -2,11 +2,15 @@
   "author": "virtualpatterns.com <code@virtualpatterns.com> (http://www.virtualpatterns.com)",
   "description": "Virtualize your Pug templates",
   "keywords": [
+    "babel",
     "html",
     "jade",
+    "loader",
+    "plugin",
     "pug",
     "template",
-    "virtual-dom"
+    "virtual-dom",
+    "webpack"
   ],
   "license": "ISC",
   "main": "library/loader.js",
@@ -31,7 +35,7 @@
     "debug-test-library": "rm -rf ./coverage ./process/logs/nessa.mocha.log && npm run build && node-debug ./node_modules/.bin/_mocha --bail --timeout 0 ./tests",
     "debug-run": "npm run build && node-debug server/index.js"
   },
-  "version": "0.0.12",
+  "version": "0.0.13",
   "devDependencies": {
     "babel-preset-es2015": "^6.22.0",
     "istanbul": "^0.4.5",
