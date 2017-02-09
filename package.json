@@ -31,7 +31,7 @@
     "debug-test-library": "rm -rf ./coverage ./process/logs/nessa.mocha.log && npm run build && node-debug ./node_modules/.bin/_mocha --bail --timeout 0 ./tests",
     "debug-run": "npm run build && node-debug server/index.js"
   },
-  "version": "0.0.10",
+  "version": "0.0.11",
   "devDependencies": {
     "babel-preset-es2015": "^6.22.0",
     "istanbul": "^0.4.5",

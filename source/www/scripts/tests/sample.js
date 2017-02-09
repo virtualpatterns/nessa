@@ -1,15 +1,19 @@
 import It from './library/it'
 
-import WelcomeBabel from './resources/sample/welcome.babel.pug'
 import WelcomeWebPack from './resources/sample/welcome.webpack.pug'
+import DefaultWebPack from './resources/sample/default.webpack.pug'
+
+const WelcomeBabel = require('./resources/sample/welcome.babel.pug')
+const DefaultBabel = require('./resources/sample/default.babel.pug')
 
 describe('Sample', () => {
 
   It.shouldEqual([
     {
-      'resourcePath': './resources/sample/default.babel.pug',
-      'virtualContentFn': require('./resources/sample/default.babel.pug'),
+      'resourcePath': './resources/sample/default.webpack.pug',
+      'virtualContentFn': DefaultWebPack,
       'data': {
+        WelcomeWebPack,
         'name': 'Forbes'
       },
       'matchFn': '<div><h1>Welcome Forbes</h1><p>Forbes\'s Pug source code!</p></div>',
@@ -17,10 +21,9 @@ describe('Sample', () => {
       // 'itFn': it.only
     },
     {
-      'resourcePath': './resources/sample/default.webpack.pug',
-      'virtualContentFn': require('./resources/sample/default.webpack.pug'),
+      'resourcePath': './resources/sample/default.babel.pug',
+      'virtualContentFn': DefaultBabel,
       'data': {
-        WelcomeWebPack,
         'name': 'Forbes'
       },
       'matchFn': '<div><h1>Welcome Forbes</h1><p>Forbes\'s Pug source code!</p></div>',

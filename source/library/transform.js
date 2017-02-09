@@ -20,8 +20,8 @@ import UnSupportedError from './errors/unsupported-error'
 
 const Transform = Object.create({})
 
-Transform.render = function (content, context, options) {
-  Log.debug('> Transform.render(content, context, options) { ... }')
+Transform.renderSource = function (content, context, options) {
+  Log.debug('> Transform.renderSource(content, context, options) { ... }')
   Log.inspect('content', content)
   Log.inspect('context', context)
   Log.inspect('options', options)
@@ -494,7 +494,7 @@ Transform.render = function (content, context, options) {
 
   }
 
-  let root =
+  let rootNode =
     Linker(
       Loader(
         Parser(
@@ -511,39 +511,39 @@ Transform.render = function (content, context, options) {
           'parse': Parser
         }))
 
-  Log.inspect('root', root)
+  Log.inspect('rootNode', rootNode)
 
-  let renderSource = []
+  let source = []
 
-  renderSource.push(`const ${Package.name}Utilities = require('${options.require && options.require.utilities ? options.require.utilities : `${Package.name}/library/utilities`}')`)
-  renderSource.push('')
-  renderSource.push(`let ${Package.name}Nodes = []`)
-  processNode(root, renderSource)
-  renderSource.push(`return ${Package.name}Nodes[0]`)
+  source.push(`const ${Package.name}Utilities = require('${options.require && options.require.utilities ? options.require.utilities : `${Package.name}/library/utilities`}')`)
+  source.push('')
+  source.push(`let ${Package.name}Nodes = []`)
+  processNode(rootNode, source)
+  source.push(`return ${Package.name}Nodes[0]`)
 
-  renderSource = withData(renderSource.join('\n'))
+  source = withData(source.join('\n'))
 
-  Log.debug('< Transform.render(content, options) { ... }')
-  // Log.inspect('renderSource', renderSource)
+  Log.debug('< Transform.renderSource(content, options) { ... }')
+  // Log.inspect('source', source)
 
-  return renderSource
+  return source
 
 }
 
 Transform.renderModule = function (content, context, options) {
   Log.debug('> Transform.renderModule(content, context, options) { ... }')
 
-  Transform.resolve(options)
+  this.resolveOptions(options)
 
   let source = []
 
   source.push('module.exports = function (data) {')
-  source.push(this.render(content, context, Object.assign({
+  source.push(this.renderSource(content, context, Object.assign({
     'isInline': false
   }, options)))
   source.push('}')
 
-  source = this.format(source.join('\n'))
+  source = this.formatSource(source.join('\n'))
 
   Log.debug('< Transform.renderModule(content, options) { ... }')
   Log.inspect('source', source)
@@ -555,7 +555,7 @@ Transform.renderModule = function (content, context, options) {
 Transform.renderPath = function (path, options) {
   Log.debug(`> Transform.renderPath('${Path.trim(path)}', options) { ... }`)
 
-  Transform.resolve(options)
+  this.resolveOptions(options)
 
   let content = FileSystem.readFileSync(path, {
     'encoding': 'utf-8'
@@ -564,14 +564,14 @@ Transform.renderPath = function (path, options) {
   let source = []
 
   source.push(`function ${Package.name}Render (data) {`)
-  source.push(this.render(content, {
+  source.push(this.renderSource(content, {
     'path': path
   }, Object.assign({
     'isInline': true
   }, options)))
   source.push('}')
 
-  source = this.format(source.join('\n'))
+  source = this.formatSource(source.join('\n'))
 
   Log.debug(`< Transform.renderPath('${Path.trim(path)}', options) { ... }`)
   Log.inspect('source', source)
@@ -583,7 +583,7 @@ Transform.renderPath = function (path, options) {
 Transform.compilePath = function (path, options) {
   Log.debug(`> Transform.compilePath('${Path.trim(path)}', options) { ... }`)
 
-  Transform.resolve(options)
+  this.resolveOptions(options)
 
   let content = FileSystem.readFileSync(path, {
     'encoding': 'utf-8'
@@ -592,14 +592,14 @@ Transform.compilePath = function (path, options) {
   let source = []
 
   source.push(`function ${Package.name}Render (data) {`)
-  source.push(this.render(content, {
+  source.push(this.renderSource(content, {
     'path': path
   }, Object.assign({
     'isInline': false
   }, options)))
   source.push('}')
 
-  source = this.format(source.join('\n'))
+  source = this.formatSource(source.join('\n'))
 
   let _source = []
 
@@ -617,8 +617,8 @@ Transform.compilePath = function (path, options) {
 
 }
 
-Transform.resolve = function (options) {
-  Log.debug(`> Transform.resolve(options) { ... }`)
+Transform.resolveOptions = function (options) {
+  Log.debug(`> Transform.resolveOptions(options) { ... }`)
   // Log.inspect('options', options)
 
   if (options &&
@@ -628,11 +628,14 @@ Transform.resolve = function (options) {
 
       let path = options.require[name]
 
+      // path = undefined ... delete it
       // path = "./library/utilities" ... relative to root, make absolute
       // path = "/Users/home/babo/library/utilities" ... absolute, no change
       // path = "abclibrary/utilities" ... library, use resolve
 
-      if (Path.isRelative(path)) {
+      if (Is.undefined(path)) {
+        delete options.require[name]
+      } else if (Path.isRelative(path)) {
         options.require[name] = Path.resolve(Process.cwd(), path)
       } else if (Path.isAbsolute(path)) {
         // Do nothing
@@ -642,15 +645,19 @@ Transform.resolve = function (options) {
 
     }
 
+    if (Object.keys(options.require).length == 0) {
+      delete options.require
+    }
+
   }
 
-  Log.debug(`< Transform.resolve(options) { ... }`)
+  Log.debug(`< Transform.resolveOptions(options) { ... }`)
   Log.inspect('options', options)
 
 }
 
-Transform.format = function (source) {
-  Log.debug('> Transform.format(source) { ... }')
+Transform.formatSource = function (source) {
+  Log.debug('> Transform.formatSource(source) { ... }')
   // Log.inspect('source (before)', source)
 
   source = Compile(source, {
@@ -669,7 +676,7 @@ Transform.format = function (source) {
     'bracketSpacing': true
   })
 
-  Log.debug('< Transform.format(source) { ... }')
+  Log.debug('< Transform.formatSource(source) { ... }')
   Log.inspect('source (after)', source)
 
   return source
