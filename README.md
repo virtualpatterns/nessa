@@ -31,7 +31,7 @@ var webpackConfig = {
     loaders: [
       {
         test: /\.pug$/,
-        \: 'nessa/library/loader',
+        loader: 'nessa/library/loader',
       },
     ],
   },
@@ -96,8 +96,8 @@ The available options are:
 
 ## Usage
 
-With Babel or Webpack configured as above, simply import/require (for Webpack)
-or require (for Babel) a Pug file to access the compiled template function,
+With Babel or Webpack configured as above, simply `import`/`require` (for Webpack)
+or `require` (for Babel) a Pug file to access the compiled template function,
 which returns a virtual-dom `VNode` instead of HTML:
 
 ```javascript
