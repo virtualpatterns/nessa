@@ -10,7 +10,9 @@ describe('Conditional', () => {
     },
     {
       'resourcePath': Path.join('conditional', 'default-else-if.pug'),
-      'matchFn': '<div id="user"><h2 class="blue">Description</h2><p class="description">User has no description,\nwhy not add one...</p></div>'
+      'matchFn': '<div id="user"><h2 class="blue">Description</h2><p class="description">User has no description,\nwhy not add one...</p></div>',
+      // 'isDebugged': true,
+      // 'itFn': it.only
     },
     {
       'resourcePath': Path.join('conditional', 'default-else.pug'),

@@ -16,6 +16,12 @@ describe('Text', () => {
       'resourcePath': Path.join('text', 'block-tag.pug'),
       'matchFn': '<script>if (usingPug)\n  console.log(\'you are awesome\')\nelse\n  console.log(\'use pug\')</script>'
     },
+    {
+      'resourcePath': Path.join('text', 'newline.pug'),
+      'matchFn': '<div>Plain text followed by a newline\nshould preserve the newline, etc.</div>',
+      // 'isDebugged': true,
+      // 'itFn': it.only
+    },
   ])
 
 })

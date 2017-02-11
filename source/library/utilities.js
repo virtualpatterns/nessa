@@ -14,7 +14,7 @@ const Utilities = Object.create({})
 Utilities.createTag = function (name, attributes, children) {
   Log.debug(`- Utilities.createTag('${name}', attributes, children) { ... }`)
   // Log.inspect('attributes', attributes)
-  return Create(name, attributes, children)
+  return Create(name, attributes, this.aggregateChildren(children))
 }
 
 Utilities.createElement = function (element, attributes, children) {
@@ -87,6 +87,30 @@ Utilities.renderAttributeValue = function (name, value, accumulator) {
   Log.inspect('_value', _value)
 
   return _value
+
+}
+
+Utilities.aggregateChildren = function (nodes) {
+  Log.debug(`> Utilities.aggregateChildren(nodes) { ... }`)
+  Log.inspect('nodes', nodes)
+
+  let _nodes = !nodes ? nodes : nodes
+    .reduce((_nodes, currentNode) => {
+      let lastIndex = _nodes.length - 1
+      let lastNode = _nodes[lastIndex]
+      if (Is.string(lastNode) &&
+          Is.string(currentNode)) {
+        _nodes[lastIndex] += currentNode
+      } else {
+        _nodes.push(currentNode)
+      }
+      return _nodes
+    }, [])
+
+  Log.debug('< Utilities.aggregateChildren(nodes) { ... }')
+  Log.inspect('_nodes', _nodes)
+
+  return _nodes
 
 }
 
