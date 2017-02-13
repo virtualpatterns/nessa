@@ -25,18 +25,26 @@ module.exports = {
       }
     ]
   },
+  'node': {
+    'fs': 'empty',
+    'process': 'mock'
+  },
   'output': {
     'filename': '[name].js',
     'path': Path.join(__dirname, 'www', 'scripts', 'bundles')
   },
   plugins: [
-    new WebPack.IgnorePlugin(/^winston|\.\/process$/)
-  ],
-  'nessa': {
-    'isDebugged': true,
-    'logPath': LOG_PATH,
-    'require': {
-      'utilities': Path.join(__dirname, 'library', 'utilities')
-    }
-  }
+    new WebPack.IgnorePlugin(/^winston|\.\/process$/),
+    new WebPack.LoaderOptionsPlugin({
+      'options': {
+        'nessa': {
+          'isDebugged': true,
+          'logPath': LOG_PATH,
+          'require': {
+            'utilities': Path.join(__dirname, 'library', 'utilities')
+          }
+        }
+      }
+    })
+  ]
 }

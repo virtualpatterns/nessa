@@ -30,7 +30,7 @@ describe('Attribute', () => {
     },
     {
       'resourcePath': Path.join('attribute', 'long-multiline-attribute.pug'),
-      'matchFn': (virtualContent, realContent, transformOptions) => {
+      'matchFn': (virtualContent, realContent) => {
 
         // VirtualNode {
         //   tagName: 'INPUT',
@@ -52,14 +52,14 @@ describe('Attribute', () => {
     },
     {
       'resourcePath': Path.join('attribute', 'non-quoted-attribute.pug'),
-      'matchFn': (virtualContent, realContent, transformOptions) => {
+      'matchFn': (virtualContent, realContent) => {
         Assert.equal(virtualContent.properties['(click)'], 'play()')
         Assert.equal(realContent, '<div class="div-class"></div>')
       }
     },
     {
       'resourcePath': Path.join('attribute', 'quoted-attribute.pug'),
-      'matchFn': (virtualContent, realContent, transformOptions) => {
+      'matchFn': (virtualContent, realContent) => {
         Assert.equal(virtualContent.properties['(click)'], 'play()')
         Assert.equal(realContent, '<div class="div-class"></div>')
       }
@@ -90,25 +90,27 @@ describe('Attribute', () => {
     },
     {
       'resourcePath': Path.join('attribute', 'boolean-attribute-true.pug'),
-      'matchFn': (virtualContent, realContent, transformOptions) => {
+      'matchFn': (virtualContent, realContent) => {
         Assert.equal(virtualContent.properties.checked, 'checked')
       }
     },
     {
       'resourcePath': Path.join('attribute', 'boolean-attribute-true-string.pug'),
-      'matchFn': (virtualContent, realContent, transformOptions) => {
+      'matchFn': (virtualContent, realContent) => {
         Assert.equal(virtualContent.properties.checked, 'true')
       }
     },
     {
       'resourcePath': Path.join('attribute', 'boolean-attribute-false-string.pug'),
-      'matchFn': (virtualContent, realContent, transformOptions) => {
+      'matchFn': (virtualContent, realContent) => {
         Assert.equal(virtualContent.properties.checked, 'false')
       }
     },
     {
       'resourcePath': Path.join('attribute', 'style-attribute.pug'),
-      'matchFn': '<a style="color:red;background:green"></a>'
+      'matchFn': '<a style="color:red;background:green"></a>',
+      // 'isDebugged': true,
+      // 'itFn': it.only
     },
     {
       'resourcePath': Path.join('attribute', 'class-attribute-array.pug'),
@@ -144,7 +146,7 @@ describe('Attribute', () => {
     },
     {
       'resourcePath': Path.join('attribute', 'and-attribute.pug'),
-      'matchFn': (virtualContent, realContent, transformOptions) => {
+      'matchFn': (virtualContent, realContent) => {
         Assert.equal(virtualContent.properties.id, 'foo')
         Assert.equal(virtualContent.properties['data-bar'], 'foo')
         Assert.equal(virtualContent.properties['data-foo'], 'bar')
@@ -152,7 +154,7 @@ describe('Attribute', () => {
     },
     {
       'resourcePath': Path.join('attribute', 'and-attribute-variables.pug'),
-      'matchFn': (virtualContent, realContent, transformOptions) => {
+      'matchFn': (virtualContent, realContent) => {
         Assert.equal(virtualContent.properties.id, 'foo')
         Assert.equal(virtualContent.properties.className, 'baz')
         Assert.equal(virtualContent.properties['data-bar'], 'foo')
@@ -162,7 +164,7 @@ describe('Attribute', () => {
     },
     {
       'resourcePath': Path.join('attribute', 'escaped-attribute.pug'),
-      'matchFn': (virtualContent, realContent, transformOptions) => {
+      'matchFn': (virtualContent, realContent) => {
         Assert.equal(virtualContent.properties.data, '&lt;code&gt;')
       },
       // 'isDebugged': true,
@@ -170,7 +172,7 @@ describe('Attribute', () => {
     },
     {
       'resourcePath': Path.join('attribute', 'unescaped-attribute.pug'),
-      'matchFn': (virtualContent, realContent, transformOptions) => {
+      'matchFn': (virtualContent, realContent) => {
         Assert.equal(virtualContent.properties.data, '<code>')
       }
     },

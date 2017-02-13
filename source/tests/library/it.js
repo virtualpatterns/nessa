@@ -3,8 +3,8 @@ import Is from '@pwn/is'
 import { Log, Path } from 'mablung'
 import VirtualNodeToHTML from 'vdom-to-html'
 
-import Configuration from '../../webpack.config'
-import Package from '../../package.json'
+// import Configuration from '../../webpack.config'
+// import Package from '../../package.json'
 import Transform from '../../library/transform'
 
 import UnSupportedError from '../../library/errors/unsupported-error'
@@ -33,7 +33,8 @@ It.shouldEqual = function (tests) {
       }
 
       if (Is.function(test.matchFn)) {
-        test.matchFn(virtualContent, realContent, Configuration[Package.name])
+        // test.matchFn(virtualContent, realContent, Configuration[Package.name])
+        test.matchFn(virtualContent, realContent)
       } else {
         Assert.equal(realContent, test.matchFn)
       }
@@ -67,12 +68,14 @@ It.shouldBeUnSupported = function (tests) {
 
 It.compileResource = function(resourcePath) {
 
-  let options = Configuration[Package.name]
+  // Log.inspect('Configuration', Configuration)
+  //
+  // let options = Configuration[Package.name]
 
   return Transform.compilePath(Path.join(RESOURCES_PATH, resourcePath), {
     'isInline': false,
     'require': {
-      'utilities': options.require && options.require.utilities ? options.require.utilities : undefined
+      'utilities': Path.join(__dirname, '..', '..', 'library', 'utilities')
     }
   })
 

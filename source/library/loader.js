@@ -20,6 +20,7 @@ module.exports = function (content) {
   try {
 
     Log.debug('- module.exports = function (content) { ... }')
+    Log.inspect('options', options)
 
     this.cacheable(true)
 
