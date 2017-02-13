@@ -18,7 +18,9 @@
       ]
     }
   },
-  "plugins": [],
+  "plugins": [
+    "add-module-exports"
+  ],
   "presets": [
     "es2015"
   ]

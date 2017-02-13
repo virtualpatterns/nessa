@@ -1,6 +1,6 @@
 import Loader from 'loader-utils'
+import { Log } from 'mablung'
 
-import Log from './log'
 import Package from '../package.json'
 import Transform from './transform.js'
 

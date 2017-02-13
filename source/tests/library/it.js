@@ -1,10 +1,9 @@
 import Assert from 'assert'
 import Is from '@pwn/is'
+import { Log, Path } from 'mablung'
 import VirtualNodeToHTML from 'vdom-to-html'
 
 import Configuration from '../../webpack.config'
-import Log from '../../library/log'
-import Path from '../../library/path'
 import Package from '../../package.json'
 import Transform from '../../library/transform'
 

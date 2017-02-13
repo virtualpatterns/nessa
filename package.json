@@ -37,6 +37,7 @@
   },
   "version": "0.0.15",
   "devDependencies": {
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-es2015": "^6.22.0",
     "istanbul": "^0.4.5",
     "jstransformer-babel": "^2.1.0",
@@ -60,6 +61,7 @@
     "is-relative": "^0.2.1",
     "jsesc": "^2.4.0",
     "loader-utils": "^0.2.16",
+    "mablung": "0.0.3",
     "mkdirp": "^0.5.1",
     "pad": "^1.0.2",
     "prettier": "^0.11.0",

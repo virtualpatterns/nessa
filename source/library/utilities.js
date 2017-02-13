@@ -1,9 +1,8 @@
-import Is from '@pwn/is'
-import Each from 'foreach'
 import Create from 'virtual-dom/h'
+import Each from 'foreach'
 import Escape from 'escape-html'
-
-import Log from './log'
+import Is from '@pwn/is'
+// import { Log } from 'mablung'
 
 const ATTRIBUTE_MAP = {
   'CLASS': 'className'

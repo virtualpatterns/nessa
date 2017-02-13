@@ -1,8 +1,7 @@
 import Assert from 'assert'
+import { Path } from 'mablung'
 
 import It from './library/it'
-import Log from '../library/log'
-import Path from '../library/path'
 
 describe('Attribute', () => {
 

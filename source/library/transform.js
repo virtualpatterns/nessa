@@ -1,5 +1,6 @@
 import { transform as Compile } from 'babel-core'
 import EscapeJs from 'jsesc'
+import { FileSystem, Log, Path, Process } from 'mablung'
 import Filters from 'pug-filters'
 import { format as Format } from 'prettier'
 import Identifier from 'to-js-identifier'
@@ -10,11 +11,7 @@ import Loader from 'pug-load'
 import Parser from 'pug-parser'
 import With from 'with'
 
-import FileSystem from './file-system'
-import Log from './log'
 import Package from '../package.json'
-import Path from './path'
-import Process from './process'
 
 import UnSupportedError from './errors/unsupported-error'
 

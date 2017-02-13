@@ -1,9 +1,7 @@
+import { FileSystem, Log, Path, Process } from 'mablung'
 import Server from 'restify'
 
-import FileSystem from '../library/file-system'
-import Log from '../library/log'
 import Package from '../package.json'
-import Path from '../library/path'
 
 const LOG_PATH = Path.join(__dirname, '..', 'process', 'logs', `${Package.name}.server.log`)
 const PORT = 8082

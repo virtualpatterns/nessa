@@ -1,43 +1,43 @@
-const WebPack = require("webpack")
+'use strict';
 
-const FileSystem = require('./library/file-system')
-const Package = require('./package')
-const Path = require('./library/path')
+var _mablung = require('mablung');
 
-const LOG_PATH = Path.join(__dirname, 'process', 'logs', `${Package.name}.webpack.log`)
+var _webpack = require('webpack');
 
-FileSystem.mkdirp.sync(Path.dirname(LOG_PATH))
+var _webpack2 = _interopRequireDefault(_webpack);
+
+var _package = require('./package');
+
+var _package2 = _interopRequireDefault(_package);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var LOG_PATH = _mablung.Path.join(__dirname, 'process', 'logs', _package2.default.name + '.webpack.log');
+
+_mablung.FileSystem.mkdirp.sync(_mablung.Path.dirname(LOG_PATH));
 
 module.exports = {
   'devtool': 'source-map',
   'entry': {
-    'index': [
-      Path.join(__dirname, 'www', 'scripts', 'index.js')
-    ],
-    'test': [
-      Path.join(__dirname, 'www', 'scripts', 'test.js')
-    ]
+    'index': [_mablung.Path.join(__dirname, 'www', 'scripts', 'index.js')],
+    'test': [_mablung.Path.join(__dirname, 'www', 'scripts', 'test.js')]
   },
   'module': {
-    'loaders': [
-      {
-        'test': /\.webpack.pug$/,
-        'loader': Path.join(__dirname, 'library', 'loader'),
-      }
-    ]
+    'loaders': [{
+      'test': /\.webpack.pug$/,
+      'loader': _mablung.Path.join(__dirname, 'library', 'loader')
+    }]
   },
   'output': {
     'filename': '[name].js',
-    'path': Path.join(__dirname, 'www', 'scripts', 'bundles')
+    'path': _mablung.Path.join(__dirname, 'www', 'scripts', 'bundles')
   },
-  plugins: [
-    new WebPack.IgnorePlugin(/^winston|\.\/process$/)
-  ],
+  plugins: [new _webpack2.default.IgnorePlugin(/^winston|\.\/process$/)],
   'nessa': {
     'isDebugged': true,
     'logPath': LOG_PATH,
     'require': {
-      'utilities': Path.join(__dirname, 'library', 'utilities')
+      'utilities': _mablung.Path.join(__dirname, 'library', 'utilities')
     }
   }
-}
+};

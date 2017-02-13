@@ -1,6 +1,6 @@
-const Log = require('../library/log')
-const Package = require('../package.json')
-const Path = require('../library/path')
+import { Log, Path } from 'mablung'
+
+import Package from '../package.json'
 
 const LOG_PATH = Path.join(__dirname, '..', 'process', 'logs', `${Package.name}.mocha.log`)
 
@@ -14,6 +14,3 @@ after(() => {
   // Log.line()
   Log.removeFile(LOG_PATH)
 })
-
-// Log.inspect('virtualContent', virtualContent)
-// Log.inspect('realContent', realContent)

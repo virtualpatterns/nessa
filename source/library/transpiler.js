@@ -1,9 +1,7 @@
+import { Log, Path, Process } from 'mablung'
 import Is from '@pwn/is'
 
-import Log from './log'
 import Package from '../package.json'
-import Path from './path'
-import Process from './process'
 import Transform from './transform'
 
 function setOptions(options) {
