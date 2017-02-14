@@ -17,8 +17,8 @@ import UnSupportedError from './errors/unsupported-error'
 
 const Transform = Object.create({})
 
-Transform.renderSource = function (content, context, options) {
-  Log.debug('> Transform.renderSource(content, context, options) { ... }')
+Transform.renderContent = function (content, context, options) {
+  Log.debug('> Transform.renderContent(content, context, options) { ... }')
   Log.inspect('content', content)
   Log.inspect('context', context)
   Log.inspect('options', options)
@@ -520,7 +520,7 @@ Transform.renderSource = function (content, context, options) {
 
   source = withData(source.join('\n'))
 
-  Log.debug('< Transform.renderSource(content, options) { ... }')
+  Log.debug('< Transform.renderContent(content, options) { ... }')
   // Log.inspect('source', source)
 
   return source
@@ -535,7 +535,7 @@ Transform.renderModule = function (content, context, options) {
   let source = []
 
   source.push('module.exports = function (data) {')
-  source.push(this.renderSource(content, context, Object.assign({
+  source.push(this.renderContent(content, context, Object.assign({
     'isInline': false
   }, options)))
   source.push('}')
@@ -561,7 +561,7 @@ Transform.renderPath = function (path, options) {
   let source = []
 
   source.push(`function ${Package.name}Render (data) {`)
-  source.push(this.renderSource(content, {
+  source.push(this.renderContent(content, {
     'path': path
   }, Object.assign({
     'isInline': true
@@ -589,7 +589,7 @@ Transform.compilePath = function (path, options) {
   let source = []
 
   source.push(`function ${Package.name}Render (data) {`)
-  source.push(this.renderSource(content, {
+  source.push(this.renderContent(content, {
     'path': path
   }, Object.assign({
     'isInline': false
