@@ -18,7 +18,7 @@ describe('Case', () => {
     },
     {
       'resourcePath': Path.join('case', 'case-fall-through-break.pug'),
-      'matchFn': (virtualContent, realContent) => {
+      'matchFn': (virtualContent) => {
         Assert.equal(virtualContent, null)
       }
     },

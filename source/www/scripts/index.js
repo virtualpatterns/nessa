@@ -1,5 +1,5 @@
-import CreateContent from 'virtual-dom/create-element'
-
+// import CreateContent from 'virtual-dom/create-element'
+//
 // import Index from './index.pug'
 // import Welcome from './welcome.pug'
 

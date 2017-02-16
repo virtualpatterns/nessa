@@ -1,0 +1,15 @@
+{
+  "env": {
+    "phantomjs": true
+  },
+  "parserOptions": {
+    "sourceType": "script"
+  },
+  "rules": {
+    "no-console": "off",
+    "semi": [
+      "error",
+      "always"
+    ]
+  }
+}

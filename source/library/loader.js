@@ -4,7 +4,8 @@ import { Log } from 'mablung'
 import Package from '../package.json'
 import Transform from './transform.js'
 
-module.exports = function (content) {
+// module.exports = function (content) {
+export default function (content) {
 
   let options = Loader.getLoaderConfig(this, Package.name)
 

@@ -12,16 +12,16 @@ It.shouldEqual = function (tests) {
     (test.itFn || it)(`should produce the correct output for ${test.resourcePath}`, () => {
 
       if (test.isDebugged) {
-        // Log.debug(`should produce the correct output for ${test.resourcePath}`)
-        // Log.inspect('data', test.data || {})
+        Log.debug(`should produce the correct output for ${test.resourcePath}`)
+        Log.inspect('data', test.data || {})
       }
 
       let virtualContent = test.virtualContentFn(test.data || {})
       let realContent = CreateContent(virtualContent)
 
       if (test.isDebugged) {
-        // Log.inspect('virtualContent', virtualContent)
-        // Log.inspect('realContent.outerHTML', realContent.outerHTML)
+        Log.inspect('virtualContent', virtualContent)
+        Log.inspect('realContent.outerHTML', realContent.outerHTML)
       }
 
       if (Is.function(test.matchFn)) {

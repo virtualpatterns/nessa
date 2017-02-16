@@ -1,4 +1,4 @@
-import { FileSystem, Log, Path, Process } from 'mablung'
+import { FileSystem, Log, Path } from 'mablung'
 import Server from 'restify'
 
 import Package from '../package.json'
@@ -23,14 +23,14 @@ server.on('uncaughtException', (request, response, route, error) => {
 })
 
 server.use((request, response, next) => {
-  Log.debug(`- ${request.method} ${request.url}`);
-  next();
-});
+  Log.debug(`- ${request.method} ${request.url}`)
+  next()
+})
 
 server.get('/favicon.ico', (request, response, next) => {
   Server.serveStatic({
     'directory': Path.join(__dirname, '..', 'www', 'resources'),
-    'file': `application.ico`,
+    'file': 'application.ico',
     'maxAge': 0
   })(request, response, next)
 })

@@ -16,7 +16,8 @@ Utilities.createTag = function (name, attributes, children) {
   return Create(name, attributes, this.aggregateChildren(children))
 }
 
-Utilities.createElement = function (element, attributes, children) {
+// Utilities.createElement = function (element, attributes, children) {
+Utilities.createElement = function (element, attributes) {
   // Log.debug('- Utilities.createElement(element, attributes, children) { ... }')
   // Log.inspect('attributes', attributes)
 
@@ -136,4 +137,5 @@ Utilities.forEach = function (object, eachFn) {
 
 }
 
-module.exports = Utilities
+// module.exports = Utilities
+export default Utilities

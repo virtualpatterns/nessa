@@ -186,7 +186,7 @@ Transform.renderContent = function (content, context, options) {
     if (node.consequent) {
       processBlock(node.consequent, source)
     }
-    source.push(`}`)
+    source.push('}')
 
     if (node.alternate) {
       source.push('else {')
@@ -222,7 +222,7 @@ Transform.renderContent = function (content, context, options) {
     if (node.block) {
       processBlock(node.block, source)
     }
-    source.push(`}`)
+    source.push('}')
 
   }
 
@@ -615,7 +615,7 @@ Transform.compilePath = function (path, options) {
 }
 
 Transform.resolveOptions = function (options) {
-  Log.debug(`> Transform.resolveOptions(options) { ... }`)
+  Log.debug('> Transform.resolveOptions(options) { ... }')
   // Log.inspect('options', options)
 
   if (options &&
@@ -648,7 +648,7 @@ Transform.resolveOptions = function (options) {
 
   }
 
-  Log.debug(`< Transform.resolveOptions(options) { ... }`)
+  Log.debug('< Transform.resolveOptions(options) { ... }')
   Log.inspect('options', options)
 
 }

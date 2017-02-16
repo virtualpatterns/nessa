@@ -1,5 +1,5 @@
 import { FileSystem, Path } from 'mablung'
-import WebPack from "webpack"
+import WebPack from 'webpack'
 
 import Package from './package'
 
@@ -7,7 +7,7 @@ const LOG_PATH = Path.join(__dirname, 'process', 'logs', `${Package.name}.webpac
 
 FileSystem.mkdirp.sync(Path.dirname(LOG_PATH))
 
-module.exports = {
+export default {
   'devtool': 'source-map',
   'entry': {
     'index': [

@@ -1,7 +1,6 @@
-import { Log, Path, Process } from 'mablung'
+import { Log, Path } from 'mablung'
 import Is from '@pwn/is'
 
-import Package from '../package.json'
 import Transform from './transform'
 
 function setOptions(options) {
@@ -47,15 +46,13 @@ function clearOptions() {
 
 }
 
-module.exports = function ({ 'types': Types }) {
+module.exports = function () {
   return {
     pre(state) {
-      // console.log('- pre(state) { ... }')
       this.path = state.opts.filenameRelative
     },
     'visitor': {
       CallExpression(path, state) {
-        // console.log('- CallExpression(path, state) { ... }')
 
         let options = state.opts || {}
 
@@ -89,8 +86,7 @@ module.exports = function ({ 'types': Types }) {
 
       }
     },
-    post(state) {
-      // console.log('- post(state) { ... }')
+    post() {
       clearOptions.call(this)
     }
   }
