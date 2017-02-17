@@ -36,7 +36,7 @@
     "debug-test-library": "rm -rf ./coverage ./process/logs/nessa.mocha.log && npm run build && node-debug ./node_modules/.bin/_mocha --bail --timeout 0 ./tests",
     "debug-run": "rm -rf ./process/logs/nessa.server.log && npm run build && node-debug server/index.js"
   },
-  "version": "0.0.19",
+  "version": "0.0.20",
   "devDependencies": {
     "babel-cli": "^6.22.2",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -48,6 +48,7 @@
     "jstransformer-markdown-it": "^2.0.0",
     "mocha": "^3.2.0",
     "mocha-phantomjs": "^4.1.0",
+    "npm-check-updates": "^2.10.2",
     "restify": "^4.3.0",
     "vdom-to-html": "git+https://github.com/virtualpatterns/vdom-to-html.git",
     "webpack": "^2.2.1"
@@ -56,8 +57,8 @@
     "babel-preset-es2015-without-strict": "0.0.4",
     "escape-html": "^1.0.3",
     "foreach": "^2.0.5",
-    "mablung": "0.0.7",
-    "prettier": "^0.16.0",
+    "mablung": "0.0.8",
+    "prettier": "^0.18.0",
     "pug-filters": "^2.1.1",
     "pug-lexer": "^3.0.0",
     "pug-linker": "^2.0.2",
