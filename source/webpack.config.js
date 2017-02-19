@@ -39,7 +39,7 @@ export default {
       'options': {
         'nessa': {
           'isDebugged': true,
-          'logPath': LOG_PATH,
+          // 'logPath': LOG_PATH,
           'require': {
             'utilities': Path.join(__dirname, 'library', 'utilities')
           }

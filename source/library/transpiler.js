@@ -10,6 +10,8 @@ function setOptions(options) {
 
     this.options = options
 
+    Log.clear()
+
     if (this.options.isDebugged) {
       if (this.options.logPath) {
         Log.addFile(this.options.logPath)

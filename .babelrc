@@ -8,7 +8,6 @@
           "./library/transpiler",
           {
             "isDebugged": true,
-            "logPath": "./process/logs/nessa.babel.log",
             "require": {
               "utilities": "./library/utilities"
             },
