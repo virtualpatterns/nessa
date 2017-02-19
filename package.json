@@ -36,7 +36,7 @@
     "debug-test-library": "rm -rf ./coverage ./process/logs/nessa.mocha.log && npm run build && node-debug ./node_modules/.bin/_mocha --bail --timeout 0 ./tests",
     "debug-run": "rm -rf ./process/logs/nessa.server.log && npm run build && node-debug server/index.js"
   },
-  "version": "0.0.20",
+  "version": "0.0.21",
   "devDependencies": {
     "babel-cli": "^6.22.2",
     "babel-plugin-add-module-exports": "^0.2.1",
