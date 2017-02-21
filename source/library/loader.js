@@ -9,7 +9,7 @@ export default function (content) {
 
   let options = Loader.getLoaderConfig(this, Package.name)
 
-  Log.clear()
+  // Log.clear()
 
   if (options.debug ||
       options.isDebugged) {

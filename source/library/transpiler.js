@@ -10,7 +10,7 @@ function setOptions(options) {
 
     this.options = options
 
-    Log.clear()
+    // Log.clear()
 
     if (this.options.isDebugged) {
       if (this.options.logPath) {
