@@ -105,6 +105,63 @@ const template = require('./index.pug');
 let vtree = template({foo: 'bar'});
 ```
 
+## Example
+
+A sample application that uses the Babel plug-in (and custom `Utilities`) can be
+found [here](https://github.com/virtualpatterns/nessa-sample).
+
+## Custom Elements
+
+Custom elements can be included in templates.  In the case of the Babel plug-in
+the custom element name is the variable name of the declared template, e.g.:
+
+```javascript
+const WelcomeElement = require('./welcome.pug')
+const Default = require('./default.pug')
+```
+
+... where `welcome.pug` is ...
+
+```
+h1 Welcome #{name}
+```
+
+... and `default.pug` is ...
+
+```
+div
+  WelcomeElement(name=name)
+  p #{name}'s Pug source code!
+```
+
+... and the `Default` template function is called passing a value for the `name`
+local variable only, e.g.:
+
+```javascript
+let virtualNodes = Default({
+    'name': 'Forbes'
+  })
+```
+
+In the case of the Webpack loader the custom element name is the local name
+passed to the template function, e.g.:
+
+```javascript
+import WelcomeElement from './welcome.pug'
+import Default from './default.pug'
+```
+
+... where `welcome.pug` and `default.pug` are as above and the `Default` template
+function is called passing values for both the `WelcomeElement` custom element
+and the `name` local variable, e.g.:
+
+```javascript
+let virtualNodes = Default({
+    WelcomeElement,
+    'name': 'Forbes'
+  })
+```
+
 ## License
 
 ISC

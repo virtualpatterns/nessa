@@ -22,7 +22,7 @@
   "scripts": {
     "link": "hln ./process/logs \"$HOME/Library/Logs/nessa\"",
     "unlink": "hln -u \"$HOME/Library/Logs/nessa\"",
-    "update": "npm-check-updates",
+    "upgrade": "npm-check-updates --upgrade",
     "clean": "npm run pre-clean && npm run post-clean",
     "pre-clean": "rm -rf ./library ./process/logs/nessa.babel.log",
     "post-clean": "rm -rf ./process/logs/nessa.webpack.log ./server ./tests ./www",
@@ -37,7 +37,7 @@
     "debug-test-library": "rm -rf ./coverage ./process/logs/nessa.mocha.log && npm run build && node-debug ./node_modules/.bin/_mocha --bail --timeout 0 ./tests",
     "debug-run": "rm -rf ./process/logs/nessa.server.log && npm run build && node-debug server/index.js"
   },
-  "version": "0.0.22",
+  "version": "0.0.23",
   "devDependencies": {
     "babel-cli": "^6.23.0",
     "babel-plugin-add-module-exports": "^0.2.1",
