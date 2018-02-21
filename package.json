@@ -4,6 +4,8 @@
   "files": [
     "distributables/configuration.js",
     "distributables/configuration.js.map",
+    "distributables/index.js",
+    "distributables/index.js.map",
     "distributables/library"
   ],
   "keywords": [
@@ -17,7 +19,7 @@
     "virtual-dom"
   ],
   "license": "GPL-3.0+",
-  "main": "library/loader.js",
+  "main": "distributables/index.js",
   "name": "@virtualpatterns/nessa",
   "repository": {
     "type": "git",
@@ -25,7 +27,7 @@
   },
   "scripts": {
     "refresh": "rm -Rf node_modules distributables/* && npm install",
-    "clean": "rm -Rf distributables/configuration.js distributables/tasks",
+    "clean": "rm -Rf distributables/configuration.js distributables/configuration.js.map distributables/tasks",
     "lint": "npm run clean && eslint --ignore-path .gitignore source/tasks",
     "build": "npm run lint && babel source/configuration.js --out-file distributables/configuration.js --quiet --source-maps && babel source/tasks --copy-files --out-dir distributables/tasks --quiet --source-maps",
     "tasks": "npm run build && jake --jakefile distributables/tasks/index.js --tasks",

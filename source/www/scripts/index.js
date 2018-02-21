@@ -3,7 +3,8 @@ import Assert from 'assert'
 import Create from 'virtual-dom/create-element'
 import { Log } from '@virtualpatterns/mablung'
 
-import Utilities from '../../library/utilities'
+import Utilities from '../../index'
+// import Utilities from '../../library/utilities'
 
 document.addEventListener('DOMContentLoaded', () => {
   Log.createFormattedLog()

@@ -14,7 +14,7 @@ Page.onConsole = async function (message) {
   let _message = await handle.jsonValue()
 
   // Log.debug('Page.onConsole(message) { ... }')
-  Log.debug(`Page.onConsole(message) { ... }\n\n${_message}`)
+  Log.debug(`Page.onConsole(message) { ... }\n\n${_message}\n`)
 
 }
 

@@ -13,12 +13,12 @@ Jake.addListener('start', () => {
 desc('Remove built and bundled folders and files')
 task('clean', [], { 'async': false }, () => {
 
-  // Jake.exec([ 'library', 'sandbox', 'server', 'tests' ].map((folderName) => `rm -Rf distributables/${folderName}`), { 'printStderr': true, 'printStdout': true }, () => complete())
-
   Jake.rmRf('distributables/library', { 'silent': true })
   Jake.rmRf('distributables/sandbox', { 'silent': true })
   Jake.rmRf('distributables/server', { 'silent': true })
   Jake.rmRf('distributables/tests', { 'silent': true })
+  Jake.rmRf('distributables/index.js', { 'silent': true })
+  Jake.rmRf('distributables/index.js.map', { 'silent': true })
 
 })
 
@@ -29,7 +29,10 @@ task('lint', [], { 'async': true }, () => {
 
 desc('Build files')
 task('build', [ 'clean', 'lint' ], { 'async': true }, () => {
-  Jake.exec([ 'library', 'sandbox', 'server', 'tests' ].map((folderName) => `babel source/${folderName} --copy-files --out-dir distributables/${folderName} --quiet --source-maps`), { 'printStderr': true, 'printStdout': true }, () => complete())
+  Jake.exec([
+    ...([ 'library', 'sandbox', 'server', 'tests' ].map((folderName) => `babel source/${folderName} --copy-files --out-dir distributables/${folderName} --quiet --source-maps`)),
+    ...([ 'index.js' ].map((fileName) => `babel source/${fileName} --out-file distributables/${fileName} --quiet --source-maps`))
+  ], { 'printStderr': true, 'printStdout': true }, () => complete())
 })
 
 desc('Bundle files, watch for changes')
