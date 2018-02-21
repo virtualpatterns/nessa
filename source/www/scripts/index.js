@@ -1,16 +1,17 @@
-// import CreateContent from 'virtual-dom/create-element'
-//
-// import Index from './index.pug'
-// import Welcome from './welcome.pug'
+import 'babel-polyfill'
+import Assert from 'assert'
+import Create from 'virtual-dom/create-element'
+import { Log } from '@virtualpatterns/mablung'
+
+import Utilities from '../../library/utilities'
 
 document.addEventListener('DOMContentLoaded', () => {
+  Log.createFormattedLog()
+  Log.debug('document.addEventListener(\'DOMContentLoaded\', () => { ... }')
 
-  // let virtualContent = Index({
-  //   Welcome,
-  //   'name': 'virtualpatterns.com'
-  // })
-  // let realContent = CreateContent(virtualContent)
-  //
-  // document.getElementById('content').appendChild(realContent)
+  window.Assert = Assert
+  window.Create = Create
+  window.Log = Log
+  window.Utilities = Utilities
 
 })

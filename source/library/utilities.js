@@ -1,8 +1,7 @@
-import Create from 'virtual-dom/h'
+import CreateTag from 'virtual-dom/h'
 import Each from 'foreach'
-import Escape from 'escape-html'
+import EscapeHtml from 'escape-html'
 import Is from '@pwn/is'
-// import { Log } from 'mablung'
 
 const ATTRIBUTE_MAP = {
   'CLASS': 'className'
@@ -11,20 +10,13 @@ const ATTRIBUTE_MAP = {
 const Utilities = Object.create({})
 
 Utilities.createTag = function (name, attributes, children) {
-  // Log.debug(`- Utilities.createTag('${name}', attributes, children) { ... }`)
-  // Log.inspect('attributes', attributes)
-  return Create(name, attributes, this.aggregateChildren(children))
+  return CreateTag(name, attributes, this.aggregateChildren(children))
 }
 
-// Utilities.createElement = function (element, attributes, children) {
 Utilities.createElement = function (element, attributes) {
-  // Log.debug('- Utilities.createElement(element, attributes, children) { ... }')
-  // Log.inspect('attributes', attributes)
 
   if (Is.function(element)) {
     return element(attributes)
-  } else if (Is.function(element.render)) {
-    return element.render(attributes)
   } else {
     return element
   }
@@ -32,27 +24,21 @@ Utilities.createElement = function (element, attributes) {
 }
 
 Utilities.addAttribute = function (name, value, attributes, isMapped = true, isEscaped = true) {
-  // Log.debug(`> Utilities.addAttribute('${name}', value, attributes, ${isMapped}) { ... }`)
 
   name = isMapped ? this.mapAttributeName(name) : name
   value = this.renderAttributeValue(name, value, attributes[name])
 
   if (value) {
-    attributes[name] = isEscaped ? this.escape(value) : value
+    attributes[name] = isEscaped ? EscapeHtml(value) : value
   }
 
 }
 
 Utilities.mapAttributeName = function (name) {
-  // Log.debug(`> Utilities.mapAttributeName('${name}') { ... }`)
-  let _name = ATTRIBUTE_MAP[name.toUpperCase()] || name
-  // Log.debug(`< Utilities.mapAttributeName('${name}') { ... } _name='${_name}'`)
-  return _name
+  return ATTRIBUTE_MAP[name.toUpperCase()] || name
 }
 
 Utilities.renderAttributeValue = function (name, value, accumulator) {
-  // Log.debug(`> Utilities.renderAttributeValue('${name}', value, ${accumulator ? `'${accumulator}'` : accumulator}) { ... }`)
-  // Log.inspect('value', value)
 
   let _value = null
 
@@ -83,16 +69,11 @@ Utilities.renderAttributeValue = function (name, value, accumulator) {
     _value = value
   }
 
-  // Log.debug(`< Utilities.renderAttributeValue('${name}', value, ${accumulator ? `'${accumulator}'` : accumulator}) { ... }`)
-  // Log.inspect('_value', _value)
-
   return _value
 
 }
 
 Utilities.aggregateChildren = function (nodes) {
-  // Log.debug(`> Utilities.aggregateChildren(nodes) { ... }`)
-  // Log.inspect('nodes', nodes)
 
   let _nodes = !nodes ? nodes : nodes
     .reduce((_nodes, currentNode) => {
@@ -107,22 +88,11 @@ Utilities.aggregateChildren = function (nodes) {
       return _nodes
     }, [])
 
-  // Log.debug('< Utilities.aggregateChildren(nodes) { ... }')
-  // Log.inspect('_nodes', _nodes)
-
   return _nodes
 
 }
 
-Utilities.escape = function (...parameters) {
-  // Log.debug(`> Utilities.escape(...parameters) { ... }`)
-  let _value = Escape.apply(Escape, parameters)
-  // Log.debug(`< Utilities.escape(...parameters) { ... } _value='${_value}'`)
-  return _value
-}
-
 Utilities.forEach = function (object, eachFn) {
-  // Log.debug(`> Utilities.forEach(object, eachFn, context) { ... }`)
 
   let context = {
     'index': 0
@@ -137,5 +107,4 @@ Utilities.forEach = function (object, eachFn) {
 
 }
 
-// module.exports = Utilities
 export default Utilities

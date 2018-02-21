@@ -1,26 +1,3 @@
 {
-  "env": {
-    "pre-build": {
-    },
-    "post-build": {
-      "plugins": [
-        [
-          "./library/transpiler",
-          {
-            "isDebugged": true,
-            "require": {
-              "utilities": "./library/utilities"
-            },
-            "test": "\\.babel.pug$"
-          }
-        ]
-      ]
-    }
-  },
-  "plugins": [
-    "add-module-exports"
-  ],
-  "presets": [
-    "es2015"
-  ]
+  "presets": [ "env" ]
 }

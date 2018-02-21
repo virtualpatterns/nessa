@@ -1,27 +1,28 @@
-import { Log, Path } from 'mablung'
 import Is from '@pwn/is'
+import { Log, Path } from '@virtualpatterns/mablung'
 
 import Transform from './transform'
+
+Log.createFormattedLog('/Users/fficnar/Library/Logs/nessa/nessa-babel.log')
 
 function setOptions(options) {
 
   if (!this.options) {
-    // console.log(`- setOptions(options) { ... } this.options=${this.options}`)
 
     this.options = options
 
-    // Log.clear()
+    if (this.options.isDebugged ||
+        this.options.logPath) {
 
-    if (this.options.isDebugged) {
       if (this.options.logPath) {
-        Log.addFile(this.options.logPath)
+        Log.createFormattedLog(this.options.logPath)
       } else {
-        Log.addConsole()
+        Log.createFormattedLog()
       }
+
     }
 
-    Log.debug('- setOptions(options) { ... }')
-    Log.inspect('options', options)
+    Log.debug({ 'options': options }, 'setOptions(options) { ... }')
 
   }
 
@@ -30,25 +31,13 @@ function setOptions(options) {
 function clearOptions() {
 
   if (this.options) {
-    // console.log('- clearOptions() { ... }')
-    Log.debug('- clearOptions() { ... }')
-
-    if (this.options.isDebugged) {
-      if (this.options.logPath) {
-        Log.removeFile(this.options.logPath)
-      } else {
-        Log.removeConsole()
-      }
-    }
-
+    Log.debug('clearOptions() { ... }')
     this.options = null
-
   }
-
 
 }
 
-module.exports = function () {
+export default function () {
   return {
     pre(state) {
       this.path = state.opts.filenameRelative
@@ -64,23 +53,14 @@ module.exports = function () {
 
           setOptions.call(this, options)
 
-          Log.debug('- CallExpression(path, state) { ... }')
-          Log.debug(`- this.path='${this.path}'`)
-          Log.debug(`- path.node.callee.name=${path.node.callee.name ? `'${path.node.callee.name}'` : path.node.callee.name}`)
-          Log.debug(`- path.node.arguments[0].value='${path.node.arguments[0].value}'`)
+          Log.debug({
+            'this.path': this.path,
+            'path.node.callee.name': path.node.callee.name,
+            'path.node.arguments[0].value': path.node.arguments[0].value
+          }, 'CallExpression(path, state) { ... }')
 
           let resourcePath = Path.resolve(Path.dirname(this.path), path.node.arguments[0].value)
-
-          Log.debug(`- resourcePath='${resourcePath}'`)
-
-          let source = Transform.renderPath(resourcePath, {
-            'isInline': true,
-            'require': {
-              'utilities': options.require && options.require.utilities ? options.require.utilities : undefined
-            }
-          })
-
-          Log.inspect('path.replaceWithSourceString(source)', source)
+          let source = Transform.renderPath(resourcePath)
 
           path.replaceWithSourceString(source)
 
