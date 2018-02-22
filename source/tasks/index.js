@@ -23,21 +23,33 @@ task('clean', [], { 'async': false }, () => {
 })
 
 desc('Count the number of dirty files')
-task('count', [], { 'async': false }, () => {
+task('count', [], { 'async': true }, () => {
   Jake.exec([ 'bin/find-dirty-files' ], { 'printStderr': true, 'printStdout': true }, () => complete())
 })
 
 desc('Lint files')
-task('lint', [ 'count' ], { 'async': true }, () => {
+task('lint', [], { 'async': true }, () => {
   Jake.exec([ 'eslint --ignore-path .gitignore --ignore-pattern source/configuration.js --ignore-pattern source/tasks source' ], { 'printStderr': true, 'printStdout': true }, () => complete())
 })
 
 desc('Build files')
-task('build', [ 'clean', 'lint' ], { 'async': true }, () => {
+task('build', [ 'clean', 'count', 'lint' ], { 'async': true }, () => {
   Jake.exec([
     ...([ 'library', 'sandbox', 'server', 'tests' ].map((folderName) => `babel source/${folderName} --copy-files --out-dir distributables/${folderName} --quiet --source-maps`)),
     ...([ 'index.js' ].map((fileName) => `babel source/${fileName} --out-file distributables/${fileName} --quiet --source-maps`))
   ], { 'printStderr': true, 'printStdout': true }, () => complete())
+})
+
+desc('Run server')
+task('run', [ 'build' ], { 'async': true }, () => {
+
+  Jake.rmRf(Configuration.server.logPath, { 'silent': true })
+
+  Jake.exec([
+    'clear',
+    'node distributables/server/index.js'
+  ], { 'printStderr': true, 'printStdout': true }, () => complete())
+
 })
 
 desc('Bundle files, watch for changes')
@@ -62,18 +74,6 @@ task('test', [ 'build' ], { 'async': true }, () => {
   Jake.exec([
     'clear',
     'mocha --bail --timeout 0 distributables/tests/index.js'
-  ], { 'printStderr': true, 'printStdout': true }, () => complete())
-
-})
-
-desc('Run server')
-task('run', [ 'build' ], { 'async': true }, () => {
-
-  Jake.rmRf(Configuration.server.logPath, { 'silent': true })
-
-  Jake.exec([
-    'clear',
-    'node distributables/server/index.js'
   ], { 'printStderr': true, 'printStdout': true }, () => complete())
 
 })
