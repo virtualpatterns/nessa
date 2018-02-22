@@ -1,0 +1,7 @@
+#!/bin/bash
+
+NUMBER_OF_FILES=$(find . -name *.bts | wc -l | sed 's/^ *//')
+
+echo "$NUMBER_OF_FILES dirty file(s) found."
+
+exit $NUMBER_OF_FILES

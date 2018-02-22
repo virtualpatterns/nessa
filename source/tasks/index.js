@@ -22,8 +22,13 @@ task('clean', [], { 'async': false }, () => {
 
 })
 
+desc('Count the number of dirty files')
+task('count', [], { 'async': false }, () => {
+  Jake.exec([ 'bin/find-dirty-files' ], { 'printStderr': true, 'printStdout': true }, () => complete())
+})
+
 desc('Lint files')
-task('lint', [], { 'async': true }, () => {
+task('lint', [ 'count' ], { 'async': true }, () => {
   Jake.exec([ 'eslint --ignore-path .gitignore --ignore-pattern source/configuration.js --ignore-pattern source/tasks source' ], { 'printStderr': true, 'printStdout': true }, () => complete())
 })
 
