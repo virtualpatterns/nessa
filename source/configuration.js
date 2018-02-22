@@ -28,7 +28,7 @@ export default {
 
   'tests': {
     'logPath': `${Process.env.HOME}/Library/Logs/nessa/nessa-tests.log`,
-    'screenshotPath': `${Process.cwd()}/nessa-tests.png`,
+    'screenshotPath': `${Process.cwd()}/process/screenshots/nessa-tests.png`,
     'serverUrl': `http://${Address.getLocalIP4()}:${PORT}`,
   }
 

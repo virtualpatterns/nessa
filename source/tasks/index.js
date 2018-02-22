@@ -73,24 +73,15 @@ task('run', [ 'build' ], { 'async': true }, () => {
 
 })
 
-// "scripts": {
-//   "link": "hln ./process/logs \"$HOME/Library/Logs/nessa\"",
-//   "unlink": "hln -u \"$HOME/Library/Logs/nessa\"",
-//   "upgrade": "npm-check-updates --upgrade",
-//   "clean": "npm run pre-clean && npm run post-clean",
-//   "pre-clean": "rm -rf ./library ./process/logs/nessa.babel.log",
-//   "post-clean": "rm -rf ./process/logs/nessa.webpack.log ./server ./tests ./www",
-//   "lint": "eslint ./resources ./source",
-//   "build": "npm run lint && npm run pre-build && npm run post-build",
-//   "pre-build": "npm run pre-clean && BABEL_ENV=pre-build babel ./source/library --copy-files --out-dir ./library",
-//   "post-build": "npm run post-clean && BABEL_ENV=post-build babel ./source --copy-files --ignore ./source/library --out-dir . && rm -f ./process/logs/nessa.webpack.log && webpack",
-//   "test": "npm run test-library && npm run test-www",
-//   "test-library": "rm -rf ./coverage ./process/logs/nessa.mocha.log && npm run build && istanbul cover ./node_modules/.bin/_mocha --dir ./coverage -- --bail --timeout 0 ./tests",
-//   "test-www": "rm -rf ./process/logs/nessa.www.log && npm run build && mocha-phantomjs --bail --hooks ./resources/hooks.js --ignore-resource-errors --path ./node_modules/.bin/phantomjs http://localhost:8082/www/test.html",
-//   "run": "rm -rf ./process/logs/nessa.server.log && npm run build && node server/index.js",
-//   "debug-test-library": "rm -rf ./coverage ./process/logs/nessa.mocha.log && npm run build && node-debug ./node_modules/.bin/_mocha --bail --timeout 0 ./tests",
-//   "debug-run": "rm -rf ./process/logs/nessa.server.log && npm run build && node-debug server/index.js"
-// },
+desc('Publish package')
+task('publish', [ 'test' ], { 'async': true }, () => {
+  Jake.exec([
+    'npm publish --access public',
+    'npm --no-git-tag-version version patch',
+    'git add package.json',
+    'git commit --message="Increment version"'
+  ], { 'printStderr': true, 'printStdout': true }, () => complete())
+})
 
 Jake.addListener('complete', () => {
   Log.debug('Jake.addListener(\'complete\', () => { ... })')

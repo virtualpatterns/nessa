@@ -4,41 +4,24 @@
 was notable for her speed, being fast "as an arrow in movement", for which reason
 she was called _Nessa the Swift_.*
 
-A [Babel](https://babeljs.io/) plug-in and [Webpack](https://webpack.github.io/)
-loader which translate [Pug](http://pugjs.org/) templates into Hyperscript for [virtual-dom](https://github.com/Matt-Esch/virtual-dom) diffing/rendering flows.
+A [Babel](https://babeljs.io/) plug-in which translate [Pug](http://pugjs.org/)
+templates into Hyperscript for [virtual-dom](https://github.com/Matt-Esch/virtual-dom)
+diffing/rendering flows.
 
 [![NPM](https://nodei.co/npm/nessa.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nessa/)
 
 ## Installation
 
-Add `nessa` to dev dependencies in `package.json`:
+Add `@virtualpatterns/nessa` to dev dependencies in `package.json`:
 
-    npm install --save-dev nessa
+    npm install --save-dev @virtualpatterns/nessa
 
-Either tell Babel to use this plug-in in `.babelrc`:
+Tell Babel to use this plug-in in `.babelrc`:
 
 ```javascript
 "plugins": [
-  "nessa/library/transpiler",
+  "@virtualpatterns/nessa/distributables/library/transpiler"
 ]
-```
-
-Or tell Webpack to use this loader for `.pug` files in `webpack.config.js`:
-
-```javascript
-var webpackConfig = {
-  module: {
-    loaders: [
-      {
-        test: /\.pug$/,
-        loader: 'nessa/library/loader',
-      },
-    ],
-  },
-
-  // ...
-
-};
 ```
 
 ## Configuration
@@ -49,74 +32,54 @@ options, e.g.:
 ```javascript
 "plugins": [
   [
-    "nessa/library/transpiler",
+    "@virtualpatterns/nessa/distributables/library/transpiler",
     {
       "isDebugged": true,
-      "logPath": "./process/logs/nessa.babel.log",
-      "require": {
-        "utilities": "./library/utilities"
-      },
+      "logPath": "./process/logs/babel.log",
       "test": "\\.pug$"
     }
   ]
 ]
 ```
 
-The available options are:
-- `isDebugged`
-- `logPath`
-- `require.utilities`
-- `test`
+#### `isDebugged` and `logPath`
 
-The recommended way to configure Webpack options for `nessa` is with a top-level
-`nessa` object, e.g.:
+The `isDebugged` and `logPath` options control logging information.  By default
+no logging output is produced.  If only `isDebugged` is specified and is `true`
+logging output is written to the console.  If only `logPath` is specified,
+regardless of `isDebugged`, logging output is written to the path specified.
 
-```javascript
-var webpackConfig = {
-  module: {
-    // ...
-  },
+#### `test`
 
-  'nessa': {
-    'isDebugged': true,
-    'logPath': './process/logs/nessa.webpack.log',
-    'require': {
-      'utilities': 'nessa/library/utilities'
-    }
-  }
-
-  // ...
-};
-```
-
-The available options are:
-- `isDebugged`
-- `logPath`
-- `require.utilities`
+The `test` option controls the files on which the plug-in operates and defaults
+to files that end in a `.pug` extension.
 
 ## Usage
 
-With Babel or Webpack configured as above, simply `import`/`require` (for Webpack)
-or `require` (for Babel) a Pug file to access the compiled template function,
-which returns a virtual-dom `VNode` instead of HTML:
+With Babel configured as above simply `require` a Pug file to access the template
+function which returns a virtual-dom `VNode` instead of HTML:
 
 ```javascript
-const template = require('./index.pug');
-let vtree = template({foo: 'bar'});
+import Utilities from '@virtualpatterns/nessa'
+
+const Template = require('./index.pug')
+
+let virtualContent = Template({ 'foo': 'bar', Utilities });
 ```
 
 ## Example
 
-A sample application that uses the Babel plug-in (and custom `Utilities`) can be
+A sample application that uses the Babel plug-in can be
 found [here](https://github.com/virtualpatterns/nessa-sample).
 
 ## Custom Elements
 
-Custom elements can be included in templates.  In the case of the Babel plug-in
-the custom element name is the variable name of the declared template, e.g.:
+Custom elements can be included in templates and are simply passed as variables.
 
 ```javascript
-const WelcomeElement = require('./welcome.pug')
+import Utilities from '@virtualpatterns/nessa'
+
+const Welcome = require('./welcome.pug')
 const Default = require('./default.pug')
 ```
 
@@ -130,38 +93,22 @@ h1 Welcome #{name}
 
 ```
 div
-  WelcomeElement(name=name)
+  Welcome(  name=name
+            Utilities!=Utilities)
   p #{name}'s Pug source code!
 ```
 
-... and the `Default` template function is called passing a value for the `name`
-local variable only, e.g.:
+... and the `Default` template function is called passing a value for the `Welcome`
+template function, the `name` variable, and the `Utilities` object, e.g.:
 
 ```javascript
-let virtualNodes = Default({
-    'name': 'Forbes'
-  })
-```
-
-In the case of the Webpack loader the custom element name is the local name
-passed to the template function, e.g.:
-
-```javascript
-import WelcomeElement from './welcome.pug'
-import Default from './default.pug'
-```
-
-... where `welcome.pug` and `default.pug` are as above and the `Default` template
-function is called passing values for both the `WelcomeElement` custom element
-and the `name` local variable, e.g.:
-
-```javascript
-let virtualNodes = Default({
-    WelcomeElement,
-    'name': 'Forbes'
+let virtualContent = Default({
+    Welcome,
+    'name': 'Forbes',
+    Utilities
   })
 ```
 
 ## License
 
-ISC
+GPL-3.0+
