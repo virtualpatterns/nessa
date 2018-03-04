@@ -1,4 +1,5 @@
 import 'babel-polyfill'
+import Bundler from 'parcel-bundler'
 import Jake from 'jake'
 import { Log } from '@virtualpatterns/mablung'
 
@@ -40,6 +41,17 @@ task('build', [ 'clean', 'count', 'lint' ], { 'async': true }, () => {
   ], { 'printStderr': true, 'printStdout': true }, () => complete())
 })
 
+desc('Bundle files')
+task('bundle', [ 'lint' ], { 'async': true }, () => {
+
+  Jake.rmRf('distributables/www', { 'silent': true })
+
+  new Bundler(Configuration.bundle.entryPath, Configuration.bundle.options)
+    .bundle()
+    .then(() => complete())
+
+})
+
 desc('Run server')
 task('run', [ 'build' ], { 'async': true }, () => {
 
@@ -52,18 +64,18 @@ task('run', [ 'build' ], { 'async': true }, () => {
 
 })
 
-desc('Bundle files, watch for changes')
-task('watch', [ 'lint' ], { 'async': true }, () => {
-
-  Jake.rmRf(Configuration.babel.logPath, { 'silent': true })
-  Jake.rmRf('distributables/www', { 'silent': true })
-
-  Jake.exec([
-    'clear',
-    'parcel watch source/www/index.html --no-cache --out-dir distributables/www'
-  ], { 'printStderr': true, 'printStdout': true }, () => complete())
-
-})
+// desc('Bundle files, watch for changes')
+// task('watch', [ 'lint' ], { 'async': true }, () => {
+//
+//   Jake.rmRf(Configuration.babel.logPath, { 'silent': true })
+//   Jake.rmRf('distributables/www', { 'silent': true })
+//
+//   Jake.exec([
+//     'clear',
+//     'parcel watch source/www/index.html --no-cache --out-dir distributables/www'
+//   ], { 'printStderr': true, 'printStdout': true }, () => complete())
+//
+// })
 
 desc('Run tests')
 task('test', [ 'build' ], { 'async': true }, () => {
